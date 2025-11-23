@@ -16,8 +16,7 @@ export async function POST(request: NextRequest) {
 
 When users request actions like "add task", "track habit", or "schedule meeting", provide structured responses that include:
 - Clear confirmation of what was understood
-- Any follow-up questions needed
-- Actionable next steps
+- What is the deadline and difficulty of the task if not provided
 
 Be conversational but focused on productivity. Always ask for clarification if the request is unclear.`
 
