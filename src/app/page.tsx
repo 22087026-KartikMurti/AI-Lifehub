@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import Link from 'next/link'
 
 export default function Home() {
   const [prompt, setPrompt] = useState('')
@@ -51,6 +52,10 @@ export default function Home() {
         <div className="text-center">
           <h1 className="text-3xl font-bold text-white mb-2">AI LifeHub</h1>
           <p className="text-gray-300">Your AI-powered productivity assistant</p>
+        </div>
+
+        <div className='hover:text-gray-800 bg-purple-600 hover:bg-purple-400 rounded p-4'>
+          <Link href="/task-manager">Click here for the Task Manager!</Link>
         </div>
         
         <form onSubmit={handleSubmit} className="flex flex-col items-center space-y-4 w-full max-w-2xl">
