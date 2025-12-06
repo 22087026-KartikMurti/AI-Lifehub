@@ -34,7 +34,8 @@ export default function TaskManager() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     if (!input.trim() || loading) return;
 
     const userMessage = input.trim();
@@ -204,7 +205,7 @@ export default function TaskManager() {
             </div>
 
             {/* Input */}
-            <div className="border-t border-gray-200 p-4 bg-white">
+            <form className="border-t border-gray-200 p-4 bg-white" onSubmit={handleSubmit}>
               <div className="max-w-3xl mx-auto flex gap-2">
                 <input
                   type="text"
@@ -215,14 +216,14 @@ export default function TaskManager() {
                   disabled={loading}
                 />
                 <Button
-                  onClick={handleSend}
+                  type='submit'
                   disabled={loading || !input.trim()}
                   className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <Send size={20} />
                 </Button>
               </div>
-            </div>
+            </form>
           </>
         ) : (
           /* Tasks View */
