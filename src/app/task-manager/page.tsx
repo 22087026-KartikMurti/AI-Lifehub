@@ -3,8 +3,12 @@
 import { useState, useRef, useEffect } from 'react'
 import { Send, Plus, Check, Trash2, Calendar, Clock, MessageSquare } from 'lucide-react'
 
+// Utilities
 import formatDate from '@/src/utils/formatDate'
 import isOverdue from '@/src/utils/isOverdue'
+import getPriorityColour from '@/src/utils/getPriorityColour'
+
+// Components
 import Button from '@/src/Components/Button'
 
 interface Task {
@@ -95,16 +99,6 @@ export default function TaskManager() {
 
   const deleteTask = (id: number) => {
     setTasks(prev => prev.filter(t => t.id !== id))
-  }
-
-  //Just a helper for tailwind so that its more organised
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'bg-red-100 text-red-800'
-      case 'medium': return 'bg-yellow-100 text-yellow-800'
-      case 'low': return 'bg-green-100 text-green-800'
-      default: return 'bg-gray-100 text-gray-800'
-    }
   }
 
   return (
@@ -281,7 +275,7 @@ export default function TaskManager() {
                                 {task.recurringInterval}
                               </span>
                             )}
-                            <span className={`text-xs px-2 py-1 rounded ${getPriorityColor(task.priority)}`}>
+                            <span className={`text-xs px-2 py-1 rounded ${getPriorityColour(task.priority)}`}>
                               {task.priority}
                             </span>
                           </div>
