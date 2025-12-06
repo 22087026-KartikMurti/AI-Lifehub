@@ -2,18 +2,21 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Send, Plus, Check, Trash2, Calendar, Clock, MessageSquare } from 'lucide-react'
-import Button from '../../Components/Button'
+
+import formatDate from '@/src/utils/formatDate'
+import isOverdue from '@/src/utils/isOverdue'
+import Button from '@/src/Components/Button'
 
 interface Task {
-  id: number;
-  title: string;
-  description?: string;
-  dueDate?: string | null;
-  priority: 'low' | 'medium' | 'high';
-  recurring: boolean;
-  recurringInterval?: string | null;
-  completed: boolean;
-  createdAt: string;
+  id: number
+  title: string
+  description?: string
+  dueDate?: string | null
+  priority: 'low' | 'medium' | 'high'
+  recurring: boolean
+  recurringInterval?: string | null
+  completed: boolean
+  createdAt: string
 }
 
 export default function TaskManager() {
@@ -27,21 +30,21 @@ export default function TaskManager() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    scrollToBottom()
+  }, [messages])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim() || loading) return;
+    if (!input.trim() || loading) return
 
-    const userMessage = input.trim();
-    setInput('');
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
-    setLoading(true);
+    const userMessage = input.trim()
+    setInput('')
+    setMessages(prev => [...prev, { role: 'user', content: userMessage }])
+    setLoading(true)
 
     try {
       const response = await fetch('api/ai', {
@@ -67,42 +70,31 @@ export default function TaskManager() {
             createdAt: new Date().toISOString()
           };
           setTasks(prev => [...prev, newTask]);
-          setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }]);
+          setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }])
         } else {
-          setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }]);
+          setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }])
         }
       } catch (e) {
-        setMessages(prev => [...prev, { role: 'assistant', content: assistantMessage }]);
+        setMessages(prev => [...prev, { role: 'assistant', content: assistantMessage }])
       }
     } catch (error) {
       setMessages(prev => [...prev, { 
         role: 'assistant', 
         content: 'Sorry, I encountered an error. Please try again.' 
-      }]);
+      }])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+
   const toggleTask = (id: number) => {
     setTasks(prev => prev.map(t => 
       t.id === id ? { ...t, completed: !t.completed } : t
-    ));
-  };
+    ))
+  }
 
   const deleteTask = (id: number) => {
-    setTasks(prev => prev.filter(t => t.id !== id));
-  };
-
-  const formatDate = (dateStr: string) => {
-    if (!dateStr) return null
-    const date = new Date(dateStr)
-    const now = new Date()
-    const tomorrow = new Date(now)
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    
-    if (date.toDateString() === now.toDateString()) return 'Today'
-    if (date.toDateString() === tomorrow.toDateString()) return 'Tomorrow'
-    return date.toLocaleDateString('en-AU', { month: 'short', day: 'numeric' })
+    setTasks(prev => prev.filter(t => t.id !== id))
   }
 
   //Just a helper for tailwind so that its more organised
@@ -246,8 +238,12 @@ export default function TaskManager() {
                   {tasks.map(task => (
                     <div
                       key={task.id}
-                      className={`bg-white border rounded-xl p-4 transition-all ${
-                        task.completed ? 'border-gray-200 opacity-60' : 'border-gray-300'
+                      className={`border rounded-xl p-4 transition-all ${
+                        task.completed
+                          ? 'bg-white border-gray-200 opacity-60'
+                          : isOverdue(task.dueDate, task.completed)
+                          ? 'bg-red-50 border-red-300'
+                          : 'bg-white border-gray-300'
                       }`}
                     >
                       <div className="flex items-start gap-3">
@@ -272,7 +268,9 @@ export default function TaskManager() {
                           
                           <div className="flex flex-wrap gap-2 mt-2">
                             {task.dueDate && (
-                              <span className="inline-flex items-center gap-1 text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">
+                              <span 
+                                className={`inline-flex items-center gap-1 text-xs ${isOverdue(task.dueDate, task.completed) ? 'bg-red-500 text-white' : 'bg-blue-50 text-blue-700'}  px-2 py-1 rounded`}
+                              >
                                 <Calendar size={12} />
                                 {formatDate(task.dueDate)}
                               </span>
