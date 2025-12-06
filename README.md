@@ -34,3 +34,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Open Router for AI
+
+I am using nvidia/nemotron-nano-12b-v2-vl:free model for the AI, if you would like to use the app for yourself, you may have to create your own API key on OpenRouter to have access to this model (until I can solve or find a work-around)
