@@ -57,7 +57,7 @@ export default function TaskManager() {
           'Content-Type': 'application/json',
         },
         
-        body: JSON.stringify({ input })
+        body: JSON.stringify({ input: userMessage })
       })
 
       const data = await response.json()
@@ -100,6 +100,9 @@ export default function TaskManager() {
   const deleteTask = (id: number) => {
     setTasks(prev => prev.filter(t => t.id !== id))
   }
+
+  // Conversation bubbles for loading reply from AI
+  const ANIMATION_DELAYS = ['0ms', '150ms', '300ms']
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -179,9 +182,13 @@ export default function TaskManager() {
                   <div className="flex justify-start">
                     <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
                       <div className="flex gap-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                        {ANIMATION_DELAYS.map((delay, index) => (
+                          <div
+                            key={index}
+                            className='w-2 h-2 bg-gray-400 rounded-full animate-bounce'
+                            style={{ animationDelay: delay }}
+                          />
+                        ))}
                       </div>
                     </div>
                   </div>

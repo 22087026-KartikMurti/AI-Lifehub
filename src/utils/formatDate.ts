@@ -1,7 +1,7 @@
 /**
  * 
  * @param dateStr - String: The date as ISO string or null/undefined
- * @returns A String (formatted date string - 'DD MM' or 'Today' or 'Tomorrow) or null if invalid
+ * @returns A String (formatted date string - 'DD MMM' or 'Today' or 'Tomorrow') or null if invalid
  * 
  * @example
  * // Current Date (Assuming today is 6 December, 2025)

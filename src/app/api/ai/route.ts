@@ -6,6 +6,7 @@ export async function POST(request: NextRequest) {
 
     const { input } = await request.json()
     console.log('Received prompt: ', input)
+    const currentDate = new Date().toISOString().split('T')[0]
 
     const promptResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: 'POST',
@@ -45,9 +46,9 @@ User: "Drink water every 2 hours"
 {"action":"create_task","task":{"title":"Drink water","description":"Stay hydrated","dueDate":null,"priority":"medium","recurring":true,"recurringInterval":"every 2 hours"},"message":"I've created a recurring task to drink water every 2 hours!"}
 
 User: "Review the project proposal by Friday"
-{"action":"create_task","task":{"title":"Review project proposal","description":"","dueDate":"2024-11-29","priority":"high","recurringInterval":null},"message":"I've created a high-priority task to review the project proposal by Friday!"}
+{"action":"create_task","task":{"title":"Review project proposal","description":"","dueDate":"${currentDate}","priority":"high","recurring":false,"recurringInterval":null},"message":"I've created a high-priority task to review the project proposal by Friday!"}
 
-Current date context: ${new Date().toISOString().split('T')[0]}`,
+Current date context: ${currentDate}`,
             },
             { "role": "user", "content": input }
           ]

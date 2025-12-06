@@ -30,7 +30,7 @@ describe('Date Format', () => {
       expect(formatDate(tomorrowStr)).toBe('Tomorrow')
     })
 
-    it('returns the date in "DD MM" format if date is not today or tomorrow', () => {
+    it('returns the date in "DD MMM" format if date is not today or tomorrow', () => {
       const futureDate = new Date()
       futureDate.setDate(futureDate.getDate() + 2)
       const futureDateStr = futureDate.toISOString()

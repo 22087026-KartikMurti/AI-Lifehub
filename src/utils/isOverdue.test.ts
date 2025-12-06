@@ -4,7 +4,7 @@ import isOverdue from './isOverdue'
 describe('Task Overdue', () => {
 
   describe('Input Validation', () => {
-    it('returns false on no dueDate or no completed bool provided', () => {   
+    it('returns false when "dueDate" or "completed" is null, undefined or an empty string', () => {   
       expect(isOverdue(null as any, null as any)).toBe(false)
       expect(isOverdue(null as any, undefined as any)).toBe(false)
       expect(isOverdue("" as any, null as any)).toBe(false)

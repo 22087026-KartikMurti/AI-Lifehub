@@ -7,7 +7,7 @@
  * 
  * @example
  * // If priority of task is high:
- * getPriorityColor('high') // returns 'bg-red-100 text-red-800'
+ * getPriorityColour('high') // returns 'bg-red-100 text-red-800'
  */
 
 const getPriorityColour = (priority: string) => {
