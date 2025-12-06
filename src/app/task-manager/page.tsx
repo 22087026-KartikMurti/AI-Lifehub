@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Send, Plus, Check, Trash2, Calendar, Clock, MessageSquare } from 'lucide-react'
+import Button from '../../Components/Button'
 
 interface Task {
   id: number;
@@ -120,24 +121,24 @@ export default function TaskManager() {
         <h1 className="text-2xl font-bold text-gray-800 mb-6">TaskFlow AI</h1>
         
         <nav className="flex-1 space-y-2">
-          <button
+          <Button
             onClick={() => setView('chat')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
               view === 'chat' 
-                ? 'bg-blue-50 text-blue-600' 
-                : 'text-gray-600 hover:bg-gray-50'
+                ? 'bg-blue-500 text-gray-50' 
+                : 'text-blue-600 hover:bg-blue-50'
             }`}
           >
             <MessageSquare size={20} />
             <span className="font-medium">Chat</span>
-          </button>
+          </Button>
           
-          <button
+          <Button
             onClick={() => setView('tasks')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
               view === 'tasks' 
-                ? 'bg-blue-50 text-blue-600' 
-                : 'text-gray-600 hover:bg-gray-50'
+                ? 'bg-blue-500 text-gray-50' 
+                : 'text-blue-600 hover:bg-blue-50'
             }`}
           >
             <Check size={20} />
@@ -145,7 +146,7 @@ export default function TaskManager() {
             <span className="ml-auto bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full">
               {tasks.filter(t => !t.completed).length}
             </span>
-          </button>
+          </Button>
         </nav>
 
         <div className="pt-4 border-t border-gray-200">
@@ -213,13 +214,13 @@ export default function TaskManager() {
                   className="flex-1 px-4 py-3 text-gray-800 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                   disabled={loading}
                 />
-                <button
+                <Button
                   onClick={handleSend}
                   disabled={loading || !input.trim()}
                   className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <Send size={20} />
-                </button>
+                </Button>
               </div>
             </div>
           </>
@@ -249,7 +250,7 @@ export default function TaskManager() {
                       }`}
                     >
                       <div className="flex items-start gap-3">
-                        <button
+                        <Button
                           onClick={() => toggleTask(task.id)}
                           className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
                             task.completed
@@ -258,7 +259,7 @@ export default function TaskManager() {
                           }`}
                         >
                           {task.completed && <Check size={14} className="text-white" />}
-                        </button>
+                        </Button>
                         
                         <div className="flex-1">
                           <h3 className={`font-medium ${task.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>
@@ -287,12 +288,13 @@ export default function TaskManager() {
                           </div>
                         </div>
                         
-                        <button
+                        <Button
                           onClick={() => deleteTask(task.id)}
-                          className="text-gray-400 hover:text-red-600 transition-colors"
+                          variant='danger'
+                          className="px-2 py-2 hover:bg-red-200 rounded-full transition-colors"
                         >
                           <Trash2 size={18} />
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   ))}
