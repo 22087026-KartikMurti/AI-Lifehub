@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Task {
+  id                String    @id @default(cuid())
+  title             String
+  description       String?
+  dueDate           DateTime?
+  priority          String
+  recurring         Boolean   @default(false)
+  recurringInterval String?
+  completed         Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}

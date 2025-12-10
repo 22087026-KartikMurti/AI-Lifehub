@@ -12,7 +12,7 @@ import getPriorityColour from '@/src/utils/getPriorityColour'
 import Button from '@/src/Components/Button'
 
 interface Task {
-  id: number
+  id: string
   title: string
   description?: string
   dueDate?: string | null
@@ -35,7 +35,25 @@ export default function TaskManager() {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  };
+  }
+
+  useEffect(() => {
+    const getTasks = async () => { 
+      try {
+        const res = await fetch('api/tasks')
+        const data = await res.json()
+
+        if(res.ok) {
+          setTasks(data)
+        }
+      } catch(error) {
+        console.error('Failed to fetch tasks: ', error)
+        setMessages(prev => [...prev, { role: 'assistant', content: 'WARNING: Could not get your tasks from database' }])
+      }
+    }
+
+    getTasks()
+  }, [])
 
   useEffect(() => {
     scrollToBottom()
@@ -65,21 +83,48 @@ export default function TaskManager() {
 
       try {
         const parsed = JSON.parse(assistantMessage)
+        console.log(parsed.task)
         
-        if (parsed.action === 'create_task') {
+        if(parsed.action === 'create_task') {
           const newTask = {
-            id: Date.now(),
             ...parsed.task,
             completed: false,
-            createdAt: new Date().toISOString()
-          };
-          setTasks(prev => [...prev, newTask]);
-          setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }])
+          }
+
+          try {
+            const response = await fetch('api/tasks', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+
+              body: JSON.stringify(parsed.task)
+            })
+
+            if(response.ok) {
+
+              const savedTask = await response.json()
+              setTasks(prev => [...prev, savedTask])
+              setMessages(prev => [...prev, { role: 'assistant', content: 'Task has been saved in database!'}])
+              setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }])
+
+            } else {
+              setMessages(prev => [...prev, { 
+                role: 'assistant', 
+                content: 'API error led to task not being saved in database'
+              }])
+            }
+          } catch (e) {
+            setMessages(prev => [...prev, { 
+              role: 'assistant', 
+              content: 'There was an error saving the task to the database'
+            }])
+          }
         } else {
           setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }])
         }
       } catch (e) {
-        setMessages(prev => [...prev, { role: 'assistant', content: assistantMessage }])
+        setMessages(prev => [...prev, { role: 'assistant', content: 'There was an error with the response' }])
       }
     } catch (error) {
       setMessages(prev => [...prev, { 
@@ -91,13 +136,13 @@ export default function TaskManager() {
     }
   }
 
-  const toggleTask = (id: number) => {
+  const toggleTask = (id: string) => {
     setTasks(prev => prev.map(t => 
       t.id === id ? { ...t, completed: !t.completed } : t
     ))
   }
 
-  const deleteTask = (id: number) => {
+  const deleteTask = (id: string) => {
     setTasks(prev => prev.filter(t => t.id !== id))
   }
 
@@ -164,7 +209,7 @@ export default function TaskManager() {
               <div className="max-w-3xl mx-auto space-y-4">
                 {messages.map((msg, idx) => (
                   <div
-                    key={idx}
+                    key={`msg-${idx}`}
                     className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
@@ -184,7 +229,7 @@ export default function TaskManager() {
                       <div className="flex gap-1">
                         {ANIMATION_DELAYS.map((delay, index) => (
                           <div
-                            key={index}
+                            key={`anim-${index}`}
                             className='w-2 h-2 bg-gray-400 rounded-full animate-bounce'
                             style={{ animationDelay: delay }}
                           />
@@ -238,7 +283,7 @@ export default function TaskManager() {
                 <div className="space-y-3">
                   {tasks.map(task => (
                     <div
-                      key={task.id}
+                      key={`task-${task.id}`}
                       className={`border rounded-xl p-4 transition-all ${
                         task.completed
                           ? 'bg-white border-gray-200 opacity-60'
