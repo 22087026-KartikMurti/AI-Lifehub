@@ -8,22 +8,27 @@ import formatDate from '@/src/utils/formatDate'
 import isOverdue from '@/src/utils/isOverdue'
 import getPriorityColour from '@/src/utils/getPriorityColour'
 
+// Services
+import { taskService } from '@/src/services/taskService'
+
+// Types
+import { Task } from '@/src/types/task'
+
 // Components
 import Button from '@/src/Components/Button'
+import { aiService } from '@/src/services/aiService'
+import Toast from '@/src/Components/Toast'
 
-interface Task {
-  id: string
-  title: string
-  description?: string
-  dueDate?: string | null
-  priority: 'low' | 'medium' | 'high'
-  recurring: boolean
-  recurringInterval?: string | null
-  completed: boolean
-  createdAt: string
+type ToastProps = {
+  message: string,
+  type: 'success' | 'error'
+  undo?: boolean
+  task?: Task
+  onRestore?: () => void
 }
 
 export default function TaskManager() {
+  const [toast, setToast] = useState<ToastProps | null>(null)
   const [tasks, setTasks] = useState<Task[]>([])
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Hi! I can help you create and manage tasks. Just tell me what you need to do, and I\'ll help you organize it. Try saying something like "I need to drink water every 2 hours" or "Review project proposal by Friday".' }
@@ -40,15 +45,17 @@ export default function TaskManager() {
   useEffect(() => {
     const getTasks = async () => { 
       try {
-        const res = await fetch('api/tasks')
-        const data = await res.json()
 
-        if(res.ok) {
-          setTasks(data)
-        }
+        const userTasks = await taskService.getTasks()
+
+        setTasks(userTasks)
+
       } catch(error) {
-        console.error('Failed to fetch tasks: ', error)
-        setMessages(prev => [...prev, { role: 'assistant', content: 'WARNING: Could not get your tasks from database' }])
+        setToast({ message: `Failed to fetch tasks: ${error}`, type: 'error'})
+        setMessages(prev => [...prev, { 
+          role: 'assistant', 
+          content: `Error fetching your tasks: ${error}` 
+        }])
       }
     }
 
@@ -69,81 +76,112 @@ export default function TaskManager() {
     setLoading(true)
 
     try {
-      const response = await fetch('api/ai', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        
-        body: JSON.stringify({ input: userMessage })
-      })
 
-      const data = await response.json()
-      const assistantMessage = data.response
+      const aiResponse = await aiService.processPrompt(userMessage)
 
       try {
-        const parsed = JSON.parse(assistantMessage)
-        console.log(parsed.task)
+        const parsed = JSON.parse(aiResponse)
         
         if(parsed.action === 'create_task') {
-          const newTask = {
-            ...parsed.task,
-            completed: false,
-          }
-
           try {
-            const response = await fetch('api/tasks', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
 
-              body: JSON.stringify(parsed.task)
+            const savedTask = await taskService.createTask(parsed.task)
+
+            setTasks(prev => [...prev, savedTask])
+            setToast({ message: 'Task Created Successfully!', type: 'success' })
+            setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }])
+
+          } catch(error) {
+            setToast({ 
+              message: `There was an error creating the task in the database: ${error}`, 
+              type: 'error' 
             })
-
-            if(response.ok) {
-
-              const savedTask = await response.json()
-              setTasks(prev => [...prev, savedTask])
-              setMessages(prev => [...prev, { role: 'assistant', content: 'Task has been saved in database!'}])
-              setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }])
-
-            } else {
-              setMessages(prev => [...prev, { 
-                role: 'assistant', 
-                content: 'API error led to task not being saved in database'
-              }])
-            }
-          } catch (e) {
             setMessages(prev => [...prev, { 
               role: 'assistant', 
-              content: 'There was an error saving the task to the database'
+              content: `There was an error creating the task in the database: ${error}`
             }])
           }
         } else {
           setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }])
         }
-      } catch (e) {
-        setMessages(prev => [...prev, { role: 'assistant', content: 'There was an error with the response' }])
+      } catch(error) {
+        setToast({ 
+          message: `There was an error with the response: ${error}`, 
+          type: 'error' 
+        })
+        setMessages(prev => [...prev, { 
+          role: 'assistant', 
+          content: `There was an error with the response: ${error}` 
+        }])
       }
-    } catch (error) {
+    } catch(error) {
+      setToast({ 
+        message: `Sorry, I encountered an error: ${error}`, 
+        type: 'error' 
+      })
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: 'Sorry, I encountered an error. Please try again.' 
+        content: `Sorry, I encountered an error: ${error}`
       }])
     } finally {
       setLoading(false)
     }
   }
 
-  const toggleTask = (id: string) => {
-    setTasks(prev => prev.map(t => 
-      t.id === id ? { ...t, completed: !t.completed } : t
-    ))
+  const toggleTask = async (id: string) => {
+    const task = tasks.find(t => t.id === id)
+
+    if(!task) return 
+
+    try {
+
+      const updatedTask = await taskService.toggleTask(task.id, !task.completed)
+      if(updatedTask.completed) {
+        setToast({ message: 'Task Complete!', type: 'success'})
+      } else {
+        setToast({ message: 'Task complete undone', type: 'success'})
+      }
+      setTasks(prev => prev.map(t => t.id === id ? updatedTask : t))
+
+    } catch(error) {
+      // Rapid tapping/clicking is common and doesn't need an error response for Abort Errors
+      if(error instanceof Error && error.name === 'AbortError') {
+        return
+      }
+      setToast({ message: `Failed to toggle task: ${error}`, type: 'error' })
+    }
   }
 
-  const deleteTask = (id: string) => {
-    setTasks(prev => prev.filter(t => t.id !== id))
+  const deleteTask = async (id: string) => {
+
+    const task = tasks.find(t => t.id === id)
+
+    if(!task) return 
+
+    try {
+      const deletedTask = await taskService.deleteTask(task.id)
+      delete deletedTask.id
+
+      setTasks(prev => prev.filter(t => t.id !== id))
+      setToast({ 
+        message: 'Task Deleted Successfully!', 
+        type: 'success', 
+        undo: true,
+        onRestore: async () => {
+          try {
+
+            const restoredTask = await taskService.createTask(deletedTask)
+            setTasks(prev => [...prev, restoredTask])
+            setToast({ message: 'Task Restored!', type: 'success' })
+
+          } catch(error) {
+            setToast({ message: `Failed to restore task: ${error}`, type: 'error' })
+          }
+        }
+      })
+    } catch(error) {
+      setToast({ message: `Failed to delete task: ${error}`, type: 'error' })
+    }
   }
 
   // Conversation bubbles for loading reply from AI
@@ -151,6 +189,15 @@ export default function TaskManager() {
 
   return (
     <div className="flex h-screen bg-gray-50">
+      {toast && (
+        <Toast 
+          message={toast.message}
+          type={toast.type}
+          undo={toast.undo}
+          onClose={() => setToast(null)}
+          onRestore={toast.onRestore}
+        />
+      )}
       {/* Sidebar */}
       <div className="w-64 bg-white border-r border-gray-200 p-4 flex flex-col">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">TaskFlow AI</h1>
