@@ -188,9 +188,10 @@ export default function TaskManager() {
   const ANIMATION_DELAYS = ['0ms', '150ms', '300ms']
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="bg-background text-foreground flex h-screen bg-gray-50">
       {toast && (
         <Toast 
+          key={toast.message + Date.now()}
           message={toast.message}
           type={toast.type}
           undo={toast.undo}
