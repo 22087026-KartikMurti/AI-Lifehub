@@ -1,12 +1,21 @@
 import { Task } from "@/src/types/task"
+import getBaseUrl from "@/src/utils/getBaseUrl"
 
 let toggleController: AbortController | null = null
 
 export const taskService = {
+  async getTaskCount() {
+    const res = await fetch(`${getBaseUrl()}/api/tasks/count`)
+    const data = await res.json()
+
+    if(!res.ok) throw new Error(`${data.error}`)
+
+    return data.count
+  },
 
   async getTasks() { 
 
-    const res = await fetch('api/tasks')
+    const res = await fetch(`${getBaseUrl()}/api/tasks`)
     const data = await res.json()
 
     if(!res.ok) throw new Error(`${data.error}`)
@@ -16,7 +25,7 @@ export const taskService = {
 
   async createTask(task: Task) {
 
-    const response = await fetch('api/tasks', {
+    const response = await fetch(`${getBaseUrl()}/api/tasks`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,7 +51,7 @@ export const taskService = {
 
     toggleController = new AbortController
 
-    const res = await fetch('api/tasks', {
+    const res = await fetch(`${getBaseUrl()}/api/tasks`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -60,8 +69,8 @@ export const taskService = {
   },
 
   async deleteTask(id: string) {
-    
-    const res = await fetch('api/tasks', {
+
+    const res = await fetch(`${getBaseUrl()}/api/tasks`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

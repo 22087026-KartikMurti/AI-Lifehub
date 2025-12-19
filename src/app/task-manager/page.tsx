@@ -10,22 +10,16 @@ import getPriorityColour from '@/src/utils/getPriorityColour'
 
 // Services
 import { taskService } from '@/src/services/taskService'
+import { aiService } from '@/src/services/aiService'
 
 // Types
 import { Task } from '@/src/types/task'
+import { ToastProps } from '@/src/types/toast'
 
 // Components
 import Button from '@/src/Components/Button'
-import { aiService } from '@/src/services/aiService'
 import Toast from '@/src/Components/Toast'
-
-type ToastProps = {
-  message: string,
-  type: 'success' | 'error'
-  undo?: boolean
-  task?: Task
-  onRestore?: () => void
-}
+import ThemeSwitcher from '@/src/Components/Themes/ThemeSwitcher'
 
 export default function TaskManager() {
   const [toast, setToast] = useState<ToastProps | null>(null)
@@ -52,10 +46,6 @@ export default function TaskManager() {
 
       } catch(error) {
         setToast({ message: `Failed to fetch tasks: ${error}`, type: 'error'})
-        setMessages(prev => [...prev, { 
-          role: 'assistant', 
-          content: `Error fetching your tasks: ${error}` 
-        }])
       }
     }
 
@@ -188,7 +178,7 @@ export default function TaskManager() {
   const ANIMATION_DELAYS = ['0ms', '150ms', '300ms']
 
   return (
-    <div className="bg-background text-foreground flex h-screen bg-gray-50">
+    <div className="flex h-screen">
       {toast && (
         <Toast 
           key={toast.message + Date.now()}
@@ -200,16 +190,16 @@ export default function TaskManager() {
         />
       )}
       {/* Sidebar */}
-      <div className="w-64 bg-white border-r border-gray-200 p-4 flex flex-col">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">TaskFlow AI</h1>
+      <div className="w-64 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-500 p-4 flex flex-col">
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">Task Manager <ThemeSwitcher /></h1>
         
         <nav className="flex-1 space-y-2">
           <Button
             onClick={() => setView('chat')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
               view === 'chat' 
-                ? 'bg-blue-500 text-gray-50' 
-                : 'text-blue-600 hover:bg-blue-50'
+                ? 'bg-blue-500 text-gray-50 dark:bg-blue-200 dark:text-gray-700' 
+                : 'text-blue-600 hover:bg-blue-50 dark:text-blue-50 dark:hover:bg-gray-700'
             }`}
           >
             <MessageSquare size={20} />
@@ -220,27 +210,27 @@ export default function TaskManager() {
             onClick={() => setView('tasks')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
               view === 'tasks' 
-                ? 'bg-blue-500 text-gray-50' 
-                : 'text-blue-600 hover:bg-blue-50'
+                ? 'bg-blue-500 text-gray-50 dark:bg-blue-200 dark:text-gray-700' 
+                : 'text-blue-600 hover:bg-blue-50 dark:text-blue-50 dark:hover:bg-gray-700'
             }`}
           >
             <Check size={20} />
             <span className="font-medium">Tasks</span>
-            <span className="ml-auto bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full">
+            <span className="ml-auto bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-200 text-xs px-2 py-1 rounded-full">
               {tasks.filter(t => !t.completed).length}
             </span>
           </Button>
         </nav>
 
-        <div className="pt-4 border-t border-gray-200">
-          <div className="text-sm text-gray-500">
+        <div className="pt-4 border-t border-gray-200 dark:border-gray-400">
+          <div className="text-sm text-gray-500 dark:text-gray-200">
             <div className="flex justify-between mb-1">
               <span>Total Tasks</span>
-              <span className="font-medium text-gray-700">{tasks.length}</span>
+              <span className="font-medium text-gray-700 dark:text-gray-50">{tasks.length}</span>
             </div>
             <div className="flex justify-between">
               <span>Completed</span>
-              <span className="font-medium text-gray-700">
+              <span className="font-medium text-gray-700 dark:text-gray-50">
                 {tasks.filter(t => t.completed).length}
               </span>
             </div>
@@ -264,7 +254,7 @@ export default function TaskManager() {
                       className={`max-w-[70%] rounded-2xl px-4 py-3 ${
                         msg.role === 'user'
                           ? 'bg-blue-600 text-white'
-                          : 'bg-white text-gray-800 border border-gray-200'
+                          : 'bg-white text-gray-800 border border-gray-200 dark:bg-gray-900 dark:text-white dark:border-none'
                       }`}
                     >
                       {msg.content}
@@ -273,7 +263,7 @@ export default function TaskManager() {
                 ))}
                 {loading && (
                   <div className="flex justify-start">
-                    <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
+                    <div className="bg-white border border-gray-200 dark:bg-gray-900 dark:text-white dark:border-none rounded-2xl px-4 py-3">
                       <div className="flex gap-1">
                         {ANIMATION_DELAYS.map((delay, index) => (
                           <div
@@ -291,14 +281,14 @@ export default function TaskManager() {
             </div>
 
             {/* Input */}
-            <form className="border-t border-gray-200 p-4 bg-white" onSubmit={handleSubmit}>
+            <form className="border-t border-gray-200 dark:border-gray-600 p-4" onSubmit={handleSubmit}>
               <div className="max-w-3xl mx-auto flex gap-2">
                 <input
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Describe your task... (e.g., 'Drink water every hour' or 'Call mom tomorrow at 3pm')"
-                  className="flex-1 px-4 py-3 text-gray-800 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                   disabled={loading}
                 />
                 <Button
