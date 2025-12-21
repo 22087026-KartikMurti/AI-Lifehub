@@ -42,6 +42,24 @@ export const taskService = {
       
   },
 
+  async updateTask(id: string, formData: Partial<Task>) {
+
+    const res = await fetch(`${getBaseUrl()}/api/tasks/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      body: JSON.stringify({ id, formData })
+    })
+
+    const data = await res.json()
+
+    if(!res.ok) throw new Error(`${data.error}`)
+
+    return data
+  },
+
   async toggleTask(id: string, completed: boolean) {
 
     // Cancel pending requests upon new request

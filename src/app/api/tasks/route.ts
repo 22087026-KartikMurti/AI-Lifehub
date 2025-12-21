@@ -12,7 +12,7 @@ export async function GET() {
 
   } catch(error) {
     console.error('Failed to fetch tasks: ', error)
-    return NextResponse.json({error: 'Failed to fetch tasks: '}, { status: 500 })
+    return NextResponse.json({error: 'Failed to fetch tasks'}, { status: 500 })
   }
 }
 
