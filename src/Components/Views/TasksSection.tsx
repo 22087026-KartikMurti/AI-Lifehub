@@ -228,7 +228,7 @@ export default function TasksPage() {
                     </Button>
                     <Button
                       onClick={() => openEditModal(task)}
-                      className='px-2 py-1 text-gray-800 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-gray-600 rounded-full'
+                      className='px-2 py-1 text-gray-800 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-gray-700 rounded-full'
                     >
                       ...
                     </Button>
