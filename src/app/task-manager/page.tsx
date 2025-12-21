@@ -21,48 +21,8 @@ export default function TaskManager() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [view, setView] = useState<View>('chat')
 
-  useEffect(() => {
-    const getTasks = async () => { 
-      try {
-
-        const userTasks = await taskService.getTasks()
-
-        setTasks(userTasks)
-
-      } catch(error) {
-        setToast({ message: `Failed to fetch tasks: ${error}`, type: 'error'})
-      }
-    }
-
-    getTasks()
-  }, [])
-
   const handleTaskCreated = (task: Task) => {
     setTasks(prev => [...prev, task])
-  }
-
-  const handleTaskToggled = (updatedTask: Task) => {
-    setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t))
-  }
-
-  const handleTaskDeleted = (id: string, deletedTask: Task) => {
-    setTasks(prev => prev.filter(t => t.id !== id))
-    setToast({ 
-      message: 'Task Deleted Successfully!', 
-      type: 'success', 
-      undo: true,
-      onRestore: async () => {
-        try {
-
-          const restoredTask = await taskService.createTask(deletedTask)
-          setTasks(prev => [...prev, restoredTask])
-          setToast({ message: 'Task Restored!', type: 'success' })
-
-        } catch(error) {
-          setToast({ message: `Failed to restore task: ${error}`, type: 'error' })
-        }
-      }
-    })
   }
 
   return (
@@ -79,7 +39,6 @@ export default function TaskManager() {
       )}
       <Sidebar
         view={view}
-        tasks={tasks}
         onViewChange={setView}
       />
 
@@ -96,12 +55,7 @@ export default function TaskManager() {
               )
             case 'tasks':
               return (
-                <TasksPage
-                  tasks={tasks}
-                  onTaskToggled={handleTaskToggled}
-                  onTaskDeleted={handleTaskDeleted}
-                  onShowToast={setToast}
-                />
+                <TasksPage />
               )
             default:
               return null

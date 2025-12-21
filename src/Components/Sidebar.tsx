@@ -8,11 +8,9 @@ import { View } from '@/src/types/view'
 
 export function Sidebar({
   view,
-  tasks,
   onViewChange
 }: {
   view: View
-  tasks: Task[]
   onViewChange: (view: View) => void
 }) {
 
@@ -43,26 +41,8 @@ export function Sidebar({
           >
             <Check size={20} />
             <span className="font-medium">Tasks</span>
-            <span className="ml-auto bg-gray-200 text-gray-700 dark:bg-gray-900 dark:text-gray-200 text-xs px-2 py-1 rounded-full">
-              {tasks.filter(t => !t.completed).length}
-            </span>
           </Button>
         </nav>
-
-        <div className="pt-4 border-t border-gray-200 dark:border-gray-400">
-          <div className="text-sm text-gray-500 dark:text-gray-200">
-            <div className="flex justify-between mb-1">
-              <span>Total Tasks</span>
-              <span className="font-medium text-gray-700 dark:text-gray-50">{tasks.length}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Completed</span>
-              <span className="font-medium text-gray-700 dark:text-gray-50">
-                {tasks.filter(t => t.completed).length}
-              </span>
-            </div>
-          </div>
-        </div>
       </div>
   )
 }
