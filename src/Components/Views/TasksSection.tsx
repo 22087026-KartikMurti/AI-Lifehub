@@ -133,7 +133,7 @@ export default function TasksPage({
                   <Button
                     onClick={() => deleteTask(task.id)}
                     variant='danger'
-                    className="px-2 py-2 hover:bg-red-200 rounded-full transition-colors"
+                    className="px-2 py-2 hover:bg-red-200 dark:hover:bg-red-600 rounded-full transition-colors"
                   >
                     <Trash2 size={18} />
                   </Button>

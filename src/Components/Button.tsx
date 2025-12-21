@@ -35,7 +35,7 @@ export default function Button({
   const variants = {
     primary: 'bg-blue-600 text-white hover:bg-blue-700',
     secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
-    danger: 'text-red-600 hover:text-red-700',
+    danger: 'text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300',
     none: ''
   }
 
