@@ -2,11 +2,11 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Send } from 'lucide-react'
-import Button from '@/src/Components/Button'
+import Button from '@/src/components/Button'
 import { aiService } from '@/src/services/aiService'
 import { taskService } from '@/src/services/taskService'
 import { ToastProps } from '@/src/types/toast'
-import Toast from '@/src/Components/Toast'
+import Toast from '@/src/components/Toast'
 
 const ANIMATION_DELAYS = ['0ms', '150ms', '300ms']
 

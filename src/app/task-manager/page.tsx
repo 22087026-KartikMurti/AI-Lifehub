@@ -6,10 +6,10 @@ import { useState, useEffect } from 'react'
 import { View } from '@/src/types/view'
 
 // Components
-import ChatSection from '@/src/Components/Views/ChatSection'
-import TasksPage from '@/src/Components/Views/TasksSection'
-import { Sidebar } from '@/src/Components/Sidebar'
-import { useTheme } from '@/src/Components/Themes/ThemeProvider'
+import ChatSection from '@/src/components/Views/ChatSection'
+import TasksPage from '@/src/components/Views/TasksSection'
+import { Sidebar } from '@/src/components/Sidebar'
+import { useTheme } from '@/src/components/Themes/ThemeProvider'
 
 export default function TaskManager() {
   const [view, setView] = useState<View>('chat')

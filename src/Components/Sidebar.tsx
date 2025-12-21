@@ -1,9 +1,8 @@
 'use client'
 
-import ThemeSwitcher from "@/src/Components/Themes/ThemeSwitcher"
+import ThemeSwitcher from "@/src/components/Themes/ThemeSwitcher"
 import { Check, MessageSquare } from 'lucide-react'
 import Button from "./Button"
-import { Task } from "../types/task"
 import { View } from '@/src/types/view'
 
 export function Sidebar({
