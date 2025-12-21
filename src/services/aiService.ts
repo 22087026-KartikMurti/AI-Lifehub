@@ -1,6 +1,8 @@
+import getBaseUrl from "@/src/utils/getBaseUrl"
+
 export const aiService = {
   async processPrompt(userMessage: string) {
-    const response = await fetch('api/ai', {
+    const response = await fetch(`${getBaseUrl()}/api/ai`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
