@@ -5,18 +5,13 @@ import { Send } from 'lucide-react'
 import Button from '@/src/Components/Button'
 import { aiService } from '@/src/services/aiService'
 import { taskService } from '@/src/services/taskService'
-import { Task } from '../../types/task'
-import { ToastProps } from '../../types/toast'
+import { ToastProps } from '@/src/types/toast'
+import Toast from '@/src/Components/Toast'
 
 const ANIMATION_DELAYS = ['0ms', '150ms', '300ms']
 
-export default function ChatSection({
-  onTaskCreated,
-  onShowToast
-}: {
-  onTaskCreated: (task: Task) => void
-  onShowToast: (toast: ToastProps) => void
-}) {
+export default function ChatSection() {
+  const [toast, setToast] = useState<ToastProps | null>(null)
   const [loading, setLoading] = useState(false)
   const [messages, setMessages] = useState([
     { 
@@ -56,12 +51,16 @@ export default function ChatSection({
 
             const savedTask = await taskService.createTask(parsed.task)
 
-            onTaskCreated(savedTask)
-            onShowToast({ message: 'Task Created Successfully!', type: 'success' })
-            setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }])
+            if(savedTask) {
+              setToast({ message: 'Task Created Successfully!', type: 'success' })
+              setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }])
+            } else {
+              setToast({ message: 'Created task returned null', type: 'error' })
+              setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }])
+            }
 
           } catch(error) {
-            onShowToast({ 
+            setToast({ 
               message: `There was an error creating the task in the database: ${error}`, 
               type: 'error' 
             })
@@ -74,7 +73,7 @@ export default function ChatSection({
           setMessages(prev => [...prev, { role: 'assistant', content: parsed.message }])
         }
       } catch(error) {
-        onShowToast({ 
+        setToast({ 
           message: `There was an error with the response: ${error}`, 
           type: 'error' 
         })
@@ -84,7 +83,7 @@ export default function ChatSection({
         }])
       }
     } catch(error) {
-      onShowToast({ 
+      setToast({ 
         message: `Sorry, I encountered an error: ${error}`, 
         type: 'error' 
       })
@@ -98,7 +97,16 @@ export default function ChatSection({
   }
   return ( 
     <>
-      {/* Chat Messages */}
+      {toast && (
+        <Toast 
+          key={Date.now()}
+          message={toast.message}
+          type={toast.type}
+          undo={toast.undo}
+          onClose={() => setToast(null)}
+          onRestore={toast.onRestore}
+        />
+      )}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-3xl mx-auto space-y-4">
           {messages.map((msg, idx) => (
