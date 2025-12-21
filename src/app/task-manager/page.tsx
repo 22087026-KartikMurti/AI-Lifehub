@@ -85,23 +85,28 @@ export default function TaskManager() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {view === 'chat' ? (
-          <>
-            <ChatSection
-              onTaskCreated={handleTaskCreated}
-              onShowToast={setToast}
-            />
-          </>
-        ) : (
-          <>
-            <TasksPage
-              tasks={tasks}
-              onTaskToggled={handleTaskToggled}
-              onTaskDeleted={handleTaskDeleted}
-              onShowToast={setToast}
-            />
-          </>
-        )}
+        {(() => {
+          switch(view) {
+            case 'chat':
+              return (
+                <ChatSection
+                  onTaskCreated={handleTaskCreated}
+                  onShowToast={setToast}
+                />
+              )
+            case 'tasks':
+              return (
+                <TasksPage
+                  tasks={tasks}
+                  onTaskToggled={handleTaskToggled}
+                  onTaskDeleted={handleTaskDeleted}
+                  onShowToast={setToast}
+                />
+              )
+            default:
+              return null
+          }
+        })()}
       </div>
     </div>
   );
