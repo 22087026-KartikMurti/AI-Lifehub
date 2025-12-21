@@ -16,7 +16,6 @@ export default function TaskManager() {
   const { mounted } = useTheme()
 
   if(!mounted) {
-    /* In case of slow network connection, this is a simple loading screen */
     return null
   }
 

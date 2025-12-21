@@ -24,6 +24,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         <div className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-100">
           <ThemeProvider>
