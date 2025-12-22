@@ -15,12 +15,8 @@ export default function TaskManager() {
   const [view, setView] = useState<View>('chat')
   const { mounted } = useTheme()
 
-  if(!mounted) {
-    return null
-  }
-
   return (
-    <div className="flex h-screen">
+    <div className={`flex h-screen ${!mounted ? 'opacity-0' : 'opacity-100 transition-opacity'}`}>
       <Sidebar
         view={view}
         onViewChange={setView}
