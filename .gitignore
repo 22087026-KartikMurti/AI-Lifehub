@@ -21,4 +21,5 @@
 *.tsbuildinfo
 next-env.d.ts
 
-/src/generated/prisma
+/generated
+generated/
