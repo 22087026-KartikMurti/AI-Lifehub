@@ -1,13 +1,6 @@
 import { useEffect } from 'react'
 import Button from './Button'
-
-type ToastProps = {
-  message: string
-  type: 'success' | 'error'
-  undo?: boolean
-  onClose: () => void
-  onRestore?: () => void
-}
+import { ToastProps } from '@/src/types/toast'
 
 export default function Toast({ message, type, undo, onClose, onRestore }: ToastProps) {
   const styles = {
@@ -22,7 +15,7 @@ export default function Toast({ message, type, undo, onClose, onRestore }: Toast
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      onClose()
+      onClose?.()
     }, 3000)
 
     return () => clearTimeout(timer)

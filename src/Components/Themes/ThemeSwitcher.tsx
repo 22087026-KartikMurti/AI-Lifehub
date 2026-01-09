@@ -13,8 +13,7 @@ export default function ThemeSwitcher() {
         dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors
       '
     >
-      {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-      {/* <span>{theme === 'light' ? 'Dark' : 'Light'} Mode</span> */}
+      {theme === 'light' ? <Moon aria-label='Moon symbol' size={20} /> : <Sun aria-label='Sun symbol' size={20} />}
     </Button>
   )
 } 

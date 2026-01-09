@@ -47,35 +47,52 @@ export default function EditTask({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor='title' className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Title
             </label>
             <input
               type="text"
+              id='title'
               value={formData.title || ''}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) => {
+                const value = e.target.value.slice(0, 50)
+                setFormData({ ...formData, title: value })
+              }}
+              maxLength={50}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               required
             />
+            <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
+              {formData.title?.length || 0}/50 characters
+            </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor='description' className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Description
             </label>
             <textarea
+              id='description'
               value={formData.description || ''}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              onChange={(e) => {
+                const value = e.target.value.slice(0, 200)
+                setFormData({ ...formData, description: value })
+              }}
+              maxLength={200}
               rows={3}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             />
+            <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
+              {formData.description?.length || 0}/200 characters
+            </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor='priority' className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Priority
             </label>
             <select
+              id='priority'
               value={formData.priority || 'medium'}
               onChange={(e) => setFormData({ ...formData, priority: e.target.value as Task['priority'] })}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
@@ -87,10 +104,11 @@ export default function EditTask({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor='dueDate' className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Due Date
             </label>
             <input
+              id='dueDate'
               type="date"
               value={
                 formData.dueDate ? 
@@ -116,16 +134,24 @@ export default function EditTask({
 
           {formData.recurring && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor='recurringInt' className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Recurring Interval
               </label>
               <input
+                id='recurringInt'
                 type="text"
                 value={formData.recurringInterval || ''}
-                onChange={(e) => setFormData({ ...formData, recurringInterval: e.target.value })}
+                onChange={(e) => {
+                  const value = e.target.value.slice(0, 20)
+                  setFormData({ ...formData, recurringInterval: value })
+                }}
+                maxLength={20}
                 placeholder="e.g., daily, weekly, monthly"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
+              <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
+                {formData.recurringInterval?.length || 0}/20 characters
+              </p>
             </div>
           )}
 

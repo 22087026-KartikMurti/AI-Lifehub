@@ -17,15 +17,24 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light')
+    try {
+      const savedTheme = localStorage.getItem('theme') as Theme
+      if(savedTheme === 'dark' || savedTheme === 'light') {
+        setTheme(savedTheme)
+        localStorage.setItem('theme', savedTheme)
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        const initialTheme = prefersDark ? 'dark' : 'light'
 
-    document.documentElement.classList.remove('light', 'dark')
-    document.documentElement.classList.add(initialTheme)
+        document.documentElement.classList.remove('light', 'dark')
+        document.documentElement.classList.add(initialTheme)
 
-    setTheme(initialTheme)
-    localStorage.setItem('theme', initialTheme)
+        setTheme(initialTheme)
+        localStorage.setItem('theme', initialTheme)
+      }
+    } catch(error) {
+      console.warn("Couldn't get saved preference, using default light theme")
+    }
     setMounted(true)
   }, [])
 
@@ -33,7 +42,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if(mounted) {
       document.documentElement.classList.remove('light', 'dark')
       document.documentElement.classList.add(theme)
-      localStorage.setItem('theme', theme)
+      try {
+        localStorage.setItem('theme', theme)
+      } catch(error) {
+        console.warn("Can't save theme to local storage")
+      }
     }
   }, [theme, mounted])
 
