@@ -1,4 +1,4 @@
-import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest'
+import { describe, it, vi, expect, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import ThemeSwitcher from './ThemeSwitcher'
