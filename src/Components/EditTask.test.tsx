@@ -39,7 +39,7 @@ describe('Edit Task', () => {
     const user = userEvent.setup()
     render(<EditTask task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
 
-    const closeButton = screen.getByRole('button', { name: '' })
+    const closeButton = screen.getByRole('button', { name: 'Close button' })
     await user.click(closeButton)
 
     expect(mockOnClose).toHaveBeenCalledTimes(1)

@@ -17,7 +17,7 @@ export function Sidebar({
       <div className="w-64 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-500 p-4 flex flex-col">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">Task Manager <ThemeSwitcher /></h1>
         
-        <nav className="flex-1 space-y-2">
+        <nav role='navigation' aria-label='Main navigation' className="flex-1 space-y-2">
           <Button
             onClick={() => onViewChange('chat')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${

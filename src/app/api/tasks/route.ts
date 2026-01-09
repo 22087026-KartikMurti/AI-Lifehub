@@ -24,17 +24,32 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
 
+    const { title, priority, recurring } = body
+    const allowedPriorities = ['low', 'medium', 'high'] as const
+    if (typeof title !== 'string' || title.trim().length === 0) {
+      return NextResponse.json({ error: 'Invalid or missing "title"' }, { status: 400 })
+    }
+    if (typeof recurring !== 'boolean') {
+      return NextResponse.json({ error: 'Invalid or missing "recurring" (must be a boolean)' }, { status: 400 })
+    }
+    const taskPriority = (priority ?? 'medium') as string
+    if (typeof taskPriority !== 'string' || !allowedPriorities.includes(taskPriority as (typeof allowedPriorities)[number])) {
+      return NextResponse.json({ error: 'Invalid "priority" value' }, { status: 400 })
+    }
+    const safeDueDate = body.dueDate ? new Date(body.dueDate) : null
+    if (safeDueDate && isNaN(safeDueDate.getTime())) {
+      return NextResponse.json({ error: 'Invalid "dueDate" value' }, { status: 400 })
+    }
     const task = await prisma.task.create({
       data: {
-        title: body.title,
+        title: title.trim(),
         description: body.description || null,
-        dueDate: body.dueDate ? new Date(body.dueDate) : null,
-        priority: body.priority || 'medium',
-        recurring: body.recurring,
-        recurringInterval: body.recurringInterval || null,
+        dueDate: safeDueDate,
+        priority: taskPriority,
+        recurring: recurring,
       }
     })
-
+    
     return NextResponse.json(task, { status: 201 })
 
   } catch(error) {
