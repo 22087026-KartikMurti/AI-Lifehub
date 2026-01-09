@@ -51,7 +51,6 @@ export default function TasksPage() {
           onRestore: async () => {
             try {
               const restoredTask = await taskService.updateTask(editingTask.id, editingTask)
-              setTasks(prev => prev.filter(t => t.id !== restoredTask.id))
               setTasks(prev => [...prev, restoredTask])
               setToast({ message: 'Previous Task Restored!', type: 'success' })
             } catch(error) {

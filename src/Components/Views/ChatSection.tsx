@@ -152,7 +152,7 @@ export default function ChatSection() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Describe your task... (e.g., 'Drink water every hour' or 'Call mom tomorrow at 3pm')"
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
             disabled={loading}
           />
           <Button
