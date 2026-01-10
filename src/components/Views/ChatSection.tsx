@@ -7,6 +7,7 @@ import { aiService } from '@/src/services/aiService'
 import { taskService } from '@/src/services/taskService'
 import { ToastProps } from '@/src/types/toast'
 import Toast from '@/src/components/Toast'
+import SpeechToText from '@/src/components/STT'
 
 const ANIMATION_DELAYS = ['0ms', '150ms', '300ms']
 
@@ -21,6 +22,7 @@ export default function ChatSection() {
   ])
   const [input, setInput] = useState('')
 
+  const sttRef = useRef<{ stopListening: () => void } | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -29,10 +31,21 @@ export default function ChatSection() {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  const handleSpeech = (speech: string) => {
+    setInput(speech)
+  }
+
+  const handleSpeechError = (error: string) => {
+    setToast({ message: error, type: 'error' })
+  }
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim() || loading) return
+
+    if(sttRef.current)
+      sttRef.current.stopListening()
 
     const userMessage = input.trim()
     setInput('')
@@ -93,8 +106,10 @@ export default function ChatSection() {
       }])
     } finally {
       setLoading(false)
+      setInput('')
     }
   }
+
   return ( 
     <>
       {toast && (
@@ -154,6 +169,12 @@ export default function ChatSection() {
             placeholder="Describe your task... (e.g., 'Drink water every hour' or 'Call mom tomorrow at 3pm')"
             className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
             disabled={loading}
+          />
+          <SpeechToText
+            onTranscript={handleSpeech}
+            onError={handleSpeechError}
+            disabled={loading}
+            className="px-4 py-3 rounded-xl transition-all"
           />
           <Button
             aria-label='Send message'
