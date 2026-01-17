@@ -1,131 +1,79 @@
 "use client"
 
-import React, { useState } from 'react'
-import ReactMarkdown from 'react-markdown'
 import Link from 'next/link'
 
 export default function Home() {
-  const [prompt, setPrompt] = useState('')
-  const [response, setResponse] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if(!prompt.trim()) return;
-
-    setLoading(true)
-    try {
-      const res = await fetch('/api/ai', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        
-        body: JSON.stringify({ prompt })
-      })
-
-      const data = await res.json()
-
-      if(res.ok) {
-        setResponse(data.response)
-      } else {
-        setResponse('Error: ' + data.error)
-      }
-    } catch(error) {
-      setResponse('Error: Failed to connect to AI')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const quickActions = [
-    "Add a task: Finish project proposal",
-    "Track habit: Drank 8 glasses of water today",
-    "Schedule meeting with team tomorrow at 2pm",
-    "Show me my tasks for today"
-  ]
 
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen space-y-6 p-4 bg-gray-900">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-white mb-2">AI LifeHub</h1>
-          <p className="text-gray-300">Your AI-powered productivity assistant</p>
-        </div>
-
-        <div className='hover:text-gray-800 bg-purple-600 hover:bg-purple-400 rounded p-4'>
-          <Link href="/task-manager">Click here for the Task Manager!</Link>
-        </div>
-        
-        <form onSubmit={handleSubmit} className="flex flex-col items-center space-y-4 w-full max-w-2xl">
-          <textarea 
-            className="border border-gray-600 p-4 w-full h-32 resize-none rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 text-white placeholder-gray-400" 
-            placeholder="What would you like to do today? (e.g., 'Add a task', 'Track a habit', 'Schedule a meeting')" 
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            disabled={loading}
-          />
-          <button
-            type="submit"
-            disabled={loading || !prompt.trim()}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white rounded-lg font-medium transition-colors"
-          >
-            {loading ? 'Processing...' : 'Send Message'}
-          </button>
-        </form>
-
-        {/* Quick Action Buttons */}
-        <div className="w-full max-w-2xl">
-          <p className="text-sm text-gray-400 mb-3">Try these examples:</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {quickActions.map((action, index) => (
-              <button
-                key={index}
-                onClick={() => setPrompt(action)}
-                className="text-left p-3 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm transition-colors text-gray-300"
-                disabled={loading}
-              >
-                {action}
-              </button>
-            ))}
+        {/* Navigation Bar */}
+        <nav className='w-full p-4 flex justify-between items-center'>
+          <div className='text-2xl font-bold text-white'>
+            AI Lifehub
           </div>
-        </div>
+          <div className='flex space-x-4'>
+            <Link
+              href='/login'
+              className='px-4 py-2 text-white hover:text-gray-300 transition-colors'
+            >
+              Login
+            </Link>
+            <Link
+              href='/signup'
+              className='px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors'
+            >
+              Sign Up
+            </Link>
+          </div>
+        </nav>
 
-        {response && (
-          <div className="mt-6 p-4 bg-gray-800 border border-gray-700 rounded-lg max-w-2xl w-full">
-            <h2 className="text-lg font-semibold text-white mb-3">AI Assistant:</h2>
-            <div className="text-gray-300 leading-relaxed">
-              <ReactMarkdown
-                components={{
-                  code: ({node, className, children, ...props}) => {
-                    const isInline = !className?.includes('language-')
-                    return isInline ? (
-                      <code className="bg-gray-700 px-1 py-0.5 rounded text-sm font-mono text-gray-200" {...props}>
-                        {children}
-                      </code>
-                    ) : (
-                      <pre className="bg-gray-900 text-gray-200 p-3 rounded overflow-x-auto">
-                        <code className="text-sm font-mono" {...props}>
-                          {children}
-                        </code>
-                      </pre>
-                    )
-                  },
-                  h1: ({children}) => <h1 className="text-2xl font-bold mb-4 text-white">{children}</h1>,
-                  h2: ({children}) => <h2 className="text-xl font-bold mb-3 text-white">{children}</h2>,
-                  h3: ({children}) => <h3 className="text-lg font-bold mb-2 text-white">{children}</h3>,
-                  ul: ({children}) => <ul className="list-disc ml-6 mb-4">{children}</ul>,
-                  ol: ({children}) => <ol className="list-decimal ml-6 mb-4">{children}</ol>,
-                  li: ({children}) => <li className="mb-1">{children}</li>,
-                  p: ({children}) => <p className="mb-4">{children}</p>,
-              }}>
-                {response}
-              </ReactMarkdown>
+        {/* Information about the project */}
+        <main className='flex-1 flex flex-col items-center justify-center px-4 py-16'>
+          <div className="max-w-4xl text-center space-y-8">
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+              Welcome to AI LifeHub
+            </h1>
+            <p className="text-xl text-gray-300 mb-8">
+              Your AI-powered productivity assistant
+            </p>
+            
+            <div className="text-gray-400 space-y-4 max-w-2xl mx-auto">
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
+                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              </p>
+              <p>
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
+                fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
+                culpa qui officia deserunt mollit anim id est laborum.
+              </p>
+              <p>
+                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque 
+                laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi 
+                architecto beatae vitae dicta sunt explicabo.
+              </p>
             </div>
           </div>
-        )}
-      </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
+            <Link
+              href='/signup'
+              className='px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-lg transition-colors'
+            >
+              Get Started
+            </Link>
+            <div className='px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold text-lg transition-colors'>
+              <Link href="/task-manager">Click here for the Task Manager!</Link>
+            </div>
+          </div>
+        </main>
+
+        <footer className="w-full p-6 text-center text-gray-500">
+          <p>&copy; 2026 AI LifeHub. All rights reserved.</p>
+        </footer>
+      </div>  
     </>
   )
 }
