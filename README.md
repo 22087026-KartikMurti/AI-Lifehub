@@ -28,8 +28,8 @@ npm run dev
 # or
 pnpm dev
 ```
-## Unit tests for all components included in this branch (Task-manager basic components integration test as well):
-  1. `pnpm dev` or `npm dev`
+## Unit and Integration tests:
+  1. Make sure dev server is running: `pnpm dev` or `npm dev`
   2. `pnpx vitest --watch` or  `npx vitest --watch`
 
 Open [http://localhost:3000](http://localhost:3000) with your browser enter the home page.
