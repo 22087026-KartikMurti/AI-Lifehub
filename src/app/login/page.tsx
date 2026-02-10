@@ -10,6 +10,9 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
+import getBaseUrl from '@/src/utils/getBaseUrl'
+import Button from '@/src/components/Button'
+
 export default function LoginPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -23,7 +26,7 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${getBaseUrl()}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,20 +113,17 @@ export default function LoginPage() {
               </div>
             )}
 
-            <button
+            <Button
               type="submit"
               disabled={loading}
               className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors"
             >
               {loading ? 'Signing in...' : 'Sign In'}
-            </button>
+            </Button>
           </form>
 
           <p className="text-center text-gray-400">
-            Don't have an account?{' '} {/* Empty space for cleaner display */}
-            <Link href="/signup" className="text-blue-500 hover:text-blue-400">
-              Sign up
-            </Link>
+            Don't have an account? <Link href="/signup" className="text-blue-500 hover:text-blue-400">Sign up</Link>
           </p>
         </div>
       </main>
