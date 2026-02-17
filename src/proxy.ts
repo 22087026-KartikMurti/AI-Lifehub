@@ -1,7 +1,6 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if(request.nextUrl.pathname === '/')
     return NextResponse.next()
 
@@ -26,6 +25,6 @@ export const config = {
      * - /_next/image (image optimization)
      * - /favicon.ico (favicon)
      */
-    '/((?!api/auth|login|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api/auth|login|signup|_next/static|_next/image|favicon.ico).*)',
   ],
 }

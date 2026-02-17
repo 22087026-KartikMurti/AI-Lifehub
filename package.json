@@ -6,14 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "migrate": "prisma migrate dev --name",
     "test-vitest": "vitest --watch",
     "lint": "eslint"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.1.0",
-    "@prisma/client": "^7.1.0",
+    "@prisma/client": "^7.3.0",
     "@types/dom-speech-recognition": "^0.0.7",
     "@types/pg": "^8.15.6",
+    "argon2": "^0.44.0",
     "lucide-react": "^0.555.0",
     "next": "16.0.1",
     "pg": "^8.16.3",
@@ -34,7 +36,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
     "jsdom": "^27.3.0",
-    "prisma": "^7.1.0",
+    "prisma": "^7.3.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.0.15"

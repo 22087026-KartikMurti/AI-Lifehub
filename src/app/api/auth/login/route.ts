@@ -1,12 +1,23 @@
 import { NextRequest, NextResponse } from "next/server"
+import { prisma } from "@/db/prisma"
+import argon2 from 'argon2'
 
 export async function POST(req: NextRequest) {
   const { username, password } = await req.json()
 
-  if(!username || !password || password !== process.env.USER_PASSWORD) 
+  if(!username || !password) 
     return NextResponse.json({ error: 'Invalid Username or Password' }, { status: 401 })
 
-  if(password === process.env.USER_PASSWORD) {
+  const userFound = await prisma.user.findUnique({
+    where: { username }
+  })
+
+  if(!userFound)
+    return NextResponse.json({ error: 'Invalid Username or Password'}, { status: 401 })
+
+  const isPasswordValid = await argon2.verify(userFound.hashed_password, password) 
+
+  if(isPasswordValid) {
     const response = NextResponse.json({
       success: true,
       message: 'Login Successful'
@@ -23,6 +34,8 @@ export async function POST(req: NextRequest) {
     })
 
     return response
+  } else {
+    return NextResponse.json({ error: 'Invalid Username or Password'}, { status: 401 })
   }
 }
 
