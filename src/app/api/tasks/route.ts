@@ -22,9 +22,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
 
-    const body = await request.json()
-
-    const { title, priority, recurring } = body
+    const { title, description, priority, dueDate, recurring, recurringInterval, userId } = await request.json()
     const allowedPriorities = ['low', 'medium', 'high'] as const
     if (typeof title !== 'string' || title.trim().length === 0) {
       return NextResponse.json({ error: 'Invalid or missing "title"' }, { status: 400 })
@@ -36,17 +34,20 @@ export async function POST(request: NextRequest) {
     if (typeof taskPriority !== 'string' || !allowedPriorities.includes(taskPriority as (typeof allowedPriorities)[number])) {
       return NextResponse.json({ error: 'Invalid "priority" value' }, { status: 400 })
     }
-    const safeDueDate = body.dueDate ? new Date(body.dueDate) : null
+    const safeDueDate = dueDate ? new Date(dueDate) : null
     if (safeDueDate && isNaN(safeDueDate.getTime())) {
       return NextResponse.json({ error: 'Invalid "dueDate" value' }, { status: 400 })
     }
+
     const task = await prisma.task.create({
       data: {
         title: title.trim(),
-        description: body.description || null,
+        description: description || null,
         dueDate: safeDueDate,
         priority: taskPriority,
-        recurring: recurring,
+        recurring,
+        recurringInterval,
+        userId
       }
     })
     

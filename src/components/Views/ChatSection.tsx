@@ -40,7 +40,7 @@ export default function ChatSection() {
     setToast({ message: error, type: 'error' })
   }
   
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault()
     if (!input.trim() || loading) return
 

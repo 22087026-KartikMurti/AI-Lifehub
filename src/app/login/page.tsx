@@ -40,7 +40,7 @@ export default function LoginPage() {
         // Redirect to task manager on successful login
         router.push('/task-manager')
       } else {
-        setError(data.error || 'Login failed')
+        setError(data.error || 'Login Failed')
       }
     } catch (err) {
       setError('An error occurred. Please try again.')
