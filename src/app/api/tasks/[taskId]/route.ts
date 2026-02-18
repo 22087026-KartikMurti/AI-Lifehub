@@ -1,13 +1,24 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/db/prisma"
+import verifyToken from "@/src/utils/verifyToken"
 
 export async function PUT(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { id, formData } = body
+    const token = request.cookies.get("auth_token")?.value
+    if(!token)
+      return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+
+    const userId = verifyToken(token).id
+
+    const { id, formData } = await request.json()
+
+    const existing = await prisma.task.findUnique({ where: { id } })
+    if(!existing || existing.userId !== userId) {
+      return NextResponse.json({ error: 'Not Found' }, { status: 404 })
+    }
 
     const updatedTask = await prisma.task.update({
-      where: { id: id },
+      where: { id },
       data: {
         title: formData.title,
         description: formData.description || null,

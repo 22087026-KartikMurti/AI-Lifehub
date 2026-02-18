@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from '@/db/prisma'
+import verifyToken from "@/src/utils/verifyToken"
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const token = req.cookies.get("auth_token")?.value
+    if(!token)
+      return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
+    const userId = verifyToken(token).id
     const tasks = await prisma.task.findMany({
+      where: {
+        userId
+      },
       orderBy: [
         { completed: 'asc' },
         { dueDate: 'asc' }
@@ -21,8 +29,14 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const token = request.cookies.get("auth_token")?.value
+    if(!token)
+      return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
-    const { title, description, priority, dueDate, recurring, recurringInterval, userId } = await request.json()
+    const userId = verifyToken(token).id
+
+    const { title, description, priority, dueDate, recurring, recurringInterval } = await request.json()
+    
     const allowedPriorities = ['low', 'medium', 'high'] as const
     if (typeof title !== 'string' || title.trim().length === 0) {
       return NextResponse.json({ error: 'Invalid or missing "title"' }, { status: 400 })
@@ -61,11 +75,22 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const body = await request.json()
+    const token = request.cookies.get("auth_token")?.value
+    if(!token)
+      return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+
+    const userId = verifyToken(token).id
+
+    const { id, completed } = await request.json()
+
+    const existing = await prisma.task.findUnique({ where: { id } })
+    if(!existing || existing.userId !== userId) {
+      return NextResponse.json({ error: 'Not Found' }, { status: 404 })
+    }
 
     const task = await prisma.task.update({
-      where: { id: body.id },
-      data: { completed: body.completed }
+      where: { id },
+      data: { completed }
     })
 
     return NextResponse.json(task)
@@ -78,10 +103,20 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const body = await request.json()
+    const token = request.cookies.get("auth_token")?.value
+    if(!token)
+      return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+
+    const userId = verifyToken(token).id
+    const { id } = await request.json()
+
+    const existing = await prisma.task.findUnique({ where: { id } })
+    if(!existing || existing.userId !== userId) {
+      return NextResponse.json({ error: 'Not Found' }, { status: 404 })
+    }
 
     const task = await prisma.task.delete({
-      where: { id: body.id }
+      where: { id }
     })
 
     return NextResponse.json(task)

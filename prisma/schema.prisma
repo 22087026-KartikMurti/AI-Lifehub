@@ -21,6 +21,7 @@ model Task {
   updatedAt         DateTime  @updatedAt
 
   @@index([userId])
+  @@unique([id, userId])
 }
 
 model User {
