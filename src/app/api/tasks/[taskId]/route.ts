@@ -32,6 +32,9 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json(updatedTask)
 
   } catch(error) {
+    if(error instanceof Error && error.message === "Invalid Session")
+      return NextResponse.json({error: error.message}, { status: 401 })
+    
     console.error('Failed to update task: ', error)
     return NextResponse.json({ error: 'Failed to update task' }, { status: 500 })
   }

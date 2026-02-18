@@ -22,6 +22,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(tasks)
 
   } catch(error) {
+    if(error instanceof Error && error.message === "Invalid Session")
+      return NextResponse.json({error: error.message}, { status: 401 })
+    
     console.error('Failed to fetch tasks: ', error)
     return NextResponse.json({error: 'Failed to fetch tasks'}, { status: 500 })
   }
@@ -68,6 +71,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(task, { status: 201 })
 
   } catch(error) {
+    if(error instanceof Error && error.message === "Invalid Session")
+      return NextResponse.json({error: error.message}, { status: 401 })
+
     console.error('Failed to create task: ', error)
     return NextResponse.json({error: 'Failed to create task'}, { status: 500 })
   }
@@ -96,6 +102,9 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json(task)
 
   } catch(error) {
+    if(error instanceof Error && error.message === "Invalid Session")
+      return NextResponse.json({error: error.message}, { status: 401 })
+
     console.error('Failed to toggle task complete: ', error)
     return NextResponse.json({error: 'Failed to toggle task complete'}, { status: 500 })
   }
@@ -122,6 +131,9 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json(task)
 
   } catch(error) {
+    if(error instanceof Error && error.message === "Invalid Session")
+      return NextResponse.json({error: error.message}, { status: 401 })
+
     console.error('Failed to delete task: ', error)
     return NextResponse.json({error: 'Failed to delete task'}, { status: 500 })
   }
