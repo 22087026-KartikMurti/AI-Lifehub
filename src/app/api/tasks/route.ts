@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from '@/db/prisma'
-import verifyToken from "@/src/utils/verifyToken"
+import { verifyToken } from "@/src/utils/tokenHelper"
 
 export async function GET(req: NextRequest) {
   try {

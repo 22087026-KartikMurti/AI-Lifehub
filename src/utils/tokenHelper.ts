@@ -7,3 +7,11 @@ export function generateToken(userId: string) {
 
   return token
 }
+
+export function verifyToken(token: string) {
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET as string) as { id: string }
+  } catch {
+    throw new Error('Invalid Session')
+  }
+}

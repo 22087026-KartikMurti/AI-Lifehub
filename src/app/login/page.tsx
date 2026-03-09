@@ -1,11 +1,5 @@
 "use client"
 
-/*
- * TODO: 
- * 
- * 1. API for logging in (api/auth/login)
- * 
-*/
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -104,6 +98,12 @@ export default function LoginPage() {
                   className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Enter your password"
                 />
+                <Link 
+                  href='/login/forgot-password'
+                  className=''
+                >
+                  Forgot Password?
+                </Link>
               </div>
             </div>
 

@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server'
 import jwt from 'jsonwebtoken'
+import { verifyToken } from '@/src/utils/tokenHelper'
 
 export function proxy(request: NextRequest) {
   if(request.nextUrl.pathname === '/')
@@ -13,7 +14,7 @@ export function proxy(request: NextRequest) {
   }
 
   try {
-    jwt.verify(authToken, process.env.JWT_SECRET as string)
+    verifyToken(authToken)
     return NextResponse.next()
   } catch {
     return NextResponse.redirect(new URL('/login', request.url))

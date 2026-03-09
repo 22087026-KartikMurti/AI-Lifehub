@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/db/prisma"
 import argon2 from 'argon2'
-import { generateToken } from "@/src/utils/generateToken"
+import { generateToken } from "@/src/utils/tokenHelper"
 
 export async function POST(req: NextRequest) {
   const { username, password } = await req.json()
