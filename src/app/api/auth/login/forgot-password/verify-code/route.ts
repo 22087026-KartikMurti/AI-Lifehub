@@ -20,9 +20,6 @@ export async function POST(req: NextRequest){
     }
 
     const isExpired = user.password_reset_expires.getTime() < Date.now()
-    console.log('Expiry: ', user.password_reset_expires.getTime())
-    console.log('Current time: ', Date.now())
-    console.log(code, user.password_reset_code)
     if(isExpired || String(code).trim() !== String(user.password_reset_code).trim())
       return NextResponse.json({ error: 'Invalid or expired verification code' }, { status: 400 })
 

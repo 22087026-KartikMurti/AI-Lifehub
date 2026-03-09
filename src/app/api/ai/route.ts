@@ -2,10 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('API Key: ', !!process.env.AI_API_KEY)
-
     const { input } = await request.json()
-    console.log('Received prompt: ', input)
     const currentDate = new Date().toISOString().split('T')[0]
 
     const promptResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -60,9 +57,7 @@ Current date context: ${currentDate}`,
     }
 
     const data = await promptResponse.json()
-    console.log("Prompt response success!")
     const response = data.choices[0].message.content || 'No response from AI.'
-    console.log("Response: ", response)
     return NextResponse.json({ response })
 
   } catch(error: any) {
