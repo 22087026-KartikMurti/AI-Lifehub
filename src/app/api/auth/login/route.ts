@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
     return response
 
   } catch {
-    NextResponse.json({ error: 'Login Failed' }, { status: 500 })
+    return NextResponse.json({ error: 'Login Failed' }, { status: 500 })
   }
 }
 
