@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "migrate": "prisma migrate dev --name",
+    "seed": "prisma db seed",
     "test-vitest": "vitest --watch",
     "lint": "eslint"
   },
@@ -23,6 +24,7 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-markdown": "^10.1.0",
+    "redis": "^5.11.0",
     "resend": "^6.9.3"
   },
   "devDependencies": {

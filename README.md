@@ -37,3 +37,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser enter the 
 ## Open Router for AI
 
 I am using nvidia/nemotron-nano-12b-v2-vl:free model for the AI, if you would like to use the app for yourself, you may have to create your own API key on OpenRouter to have access to this model (until I can solve or find a work-around)
+
+## Default Account for Quick Access
+
+There is a default account under username 'demo' with password being 'password' to use 
+for quick access in the development build. If you have trouble logging in, type `pnpm seed` and try using the previously mentioned credentials to log in once more.
