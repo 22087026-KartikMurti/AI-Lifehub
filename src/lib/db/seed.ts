@@ -40,16 +40,18 @@ async function main() {
   console.log({ user1, task1 })
 }
 
-if(process.env.NODE_ENV !== 'production') {
-  main().then(async () => {
-    await prisma.$disconnect()
-    console.log('Seeding complete')
-  }).catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
-} else {
-  console.error('Seeding disabled in production.')
-  process.exit(0)
+export default async function seed() {
+  if(process.env.NODE_ENV !== 'production') {
+    return main().then(async () => {
+      await prisma.$disconnect()
+      console.log('Seeding complete')
+    }).catch(async (e) => {
+      console.error(e)
+      await prisma.$disconnect()
+      process.exit(1)
+    })
+  } else {
+    console.error('Seeding disabled in production.')
+    process.exit(0)
+  }
 }
