@@ -39,13 +39,17 @@ async function main() {
   
   console.log({ user1, task1 })
 }
-main()
-  .then(async () => {
+
+if(process.env.NODE_ENV !== 'production') {
+  main().then(async () => {
     await prisma.$disconnect()
     console.log('Seeding complete')
-  })
-  .catch(async (e) => {
+  }).catch(async (e) => {
     console.error(e)
     await prisma.$disconnect()
     process.exit(1)
   })
+} else {
+  console.error('Seeding disabled in production.')
+  process.exit(0)
+}
