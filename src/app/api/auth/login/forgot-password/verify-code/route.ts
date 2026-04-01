@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/db/prisma"
+import { prisma } from "@/src/lib/db/prisma"
 import { generateToken } from "@/src/utils/tokenHelper"
 
 export async function POST(req: NextRequest){

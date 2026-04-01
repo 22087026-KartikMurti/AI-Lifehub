@@ -18,7 +18,9 @@ export default function forgotPasswordPage() {
   
   const handleEmailSubmit = async () => {
     try {
+      setError('')
       if(email.trim().length === 0) {
+        setError('Email field can not be empty')
         return
       }
 
@@ -46,7 +48,13 @@ export default function forgotPasswordPage() {
 
   const handleSubmitCode = async () => {
     try {
-      if(email.trim().length === 0 || code.trim().length === 0) {
+      setError('')
+      if(email.trim().length === 0) {
+        setError('Email field can not be empty')
+        return
+      }
+      if(code.trim().length === 0) {
+        setError('Verification code can not be empty')
         return
       }
 
@@ -74,6 +82,7 @@ export default function forgotPasswordPage() {
 
   const handlePasswordChange = async () => {
     try {
+      setError('')
       if(newPassword.trim().length === 0 || newPassword !== confirmPassword) {
         setError("Password is empty or does not match")
         return

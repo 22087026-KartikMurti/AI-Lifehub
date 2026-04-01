@@ -24,12 +24,31 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     setError('')
 
+    if(username.trim().length === 0) {
+      setError('Username can not be empty')
+      return
+    }
+    if(email.trim().length === 0) {
+      setError('Email can not be empty')
+      return
+    }
+    if(firstName.trim().length === 0) {
+      setError('First name can not be empty')
+      return
+    } 
+    if(lastName.trim().length === 0) {
+      setError('Last name can not be empty')
+      return
+    }
+    if(password.trim().length === 0) {
+      setError('Password can not be empty')
+      return
+    }
     if(password !== checkPassword) {
-      setError('Password need to match')
+      setError('Passwords must match')
       return 
     }
     setLoading(true)
@@ -95,7 +114,7 @@ export default function SignupPage() {
             <p className="mt-2 text-gray-400">Sign up for your account</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          <div className="mt-8 space-y-6">
             <div className="space-y-4">
               <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
                 Username
@@ -183,13 +202,13 @@ export default function SignupPage() {
             )}
 
             <Button
-              type="submit"
+              onClick={handleSubmit}
               disabled={loading}
               className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors"
             >
               {loading ? 'Signing up...' : 'Sign Up'}
             </Button>
-          </form>
+          </div>
 
           <p className="mb-10 text-center text-gray-400">
             Have an account? <Link href="/login" className="text-blue-500 hover:text-blue-400">Log In</Link>

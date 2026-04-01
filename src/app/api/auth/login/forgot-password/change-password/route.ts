@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/db/prisma"
+import { prisma } from "@/src/lib/db/prisma"
 import argon2 from "argon2"
 import { verifyToken } from "@/src/utils/tokenHelper"
 
