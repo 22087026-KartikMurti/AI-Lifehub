@@ -8,6 +8,13 @@ vi.mock('@/src/components/Themes/ThemeProvider', () => ({
   useTheme: vi.fn()
 }))
 
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    refresh: vi.fn(),
+  })),
+}))
+
 describe('Task Manager', () => {
   beforeEach(() => {
     vi.clearAllMocks()

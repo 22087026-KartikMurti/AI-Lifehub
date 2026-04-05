@@ -8,8 +8,16 @@ vi.mock('@/src/components/Themes/ThemeSwitcher', () => ({
   default: () => <div data-testid='theme-switcher'>Theme Switcher</div>
 }))
 
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    refresh: vi.fn(),
+  })),
+}))
+
+const mockOnViewChange = vi.fn()
+
 describe('Sidebar', () => {
-  const mockOnViewChange = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -76,7 +84,6 @@ describe('Sidebar', () => {
 })
 
 describe('Sidebar - Negative Testing', () => {
-  const mockOnViewChange = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
