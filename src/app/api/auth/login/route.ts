@@ -10,14 +10,13 @@ const LOGIN_LOCK_TIMER = 10 * 60
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for')
-  console.log('IP address: ', ip)
   const attemptKey = `login_attempts:${ip}`
   const lockTimer = `login_lock_timer:${ip}`
 
   try {
     const lockExpiry = await redisClient.get(lockTimer)
     if(lockExpiry) {
-      const remainingTime = Math.ceil(((parseInt(lockExpiry) + (1000 * 60 * 10)) - Date.now()) / 1000)
+      const remainingTime = await redisClient.ttl(lockTimer)
       return NextResponse.json({ error: `Too many attempts. Please try again in ${remainingTime} seconds.` }, { status: 429 })
     }
 
@@ -25,11 +24,10 @@ export async function POST(req: NextRequest) {
     if(attempts >= MAX_ATTEMPTS) {
       await redisClient.set(lockTimer, Date.now().toString())
       await redisClient.expire(lockTimer, LOGIN_LOCK_TIMER)
-      redisClient.del(attemptKey)
+      await redisClient.del(attemptKey)
       return NextResponse.json({ error: `Too many attempts. Try again in ${LOGIN_LOCK_TIMER} seconds.` }, { status: 429 })
     }
-  } catch(err) {
-    console.error(err)
+  } catch {
     return NextResponse.json({ error: 'Error attempting login.' }, { status: 500 })
   }
 

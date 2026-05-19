@@ -78,7 +78,7 @@ export default function LoginPage() {
             <p className="mt-2 text-gray-400">Sign in to your account</p>
           </div>
 
-          <div className="mt-8 space-y-6">
+          <form className="mt-8 space-y-6">
             <div className="space-y-4">
               <div>
                 <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
@@ -110,7 +110,7 @@ export default function LoginPage() {
                 />
                 <Link 
                   href='/login/forgot-password'
-                  className=''
+                  className='' // add styling
                 >
                   Forgot Password?
                 </Link>
@@ -124,13 +124,14 @@ export default function LoginPage() {
             )}
 
             <Button
+              type='submit'
               onClick={handleSubmit}
               disabled={loading}
               className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors"
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </Button>
-          </div>
+          </form>
 
           <p className="text-center text-gray-400">
             Don't have an account? <Link href="/signup" className="text-blue-500 hover:text-blue-400">Sign up</Link>
