@@ -110,7 +110,7 @@ export default function LoginPage() {
                 />
                 <Link 
                   href='/login/forgot-password'
-                  className='' // add styling
+                  className='block mt-3' // add styling
                 >
                   Forgot Password?
                 </Link>
