@@ -41,6 +41,11 @@ export async function POST(req: NextRequest) {
           please ignore this email or if you have concerns, please change your password
         `
       })
+    } else {
+      return NextResponse.json(
+        { error: 'Something went wrong. Please try again.' }, 
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({ ok: true })
