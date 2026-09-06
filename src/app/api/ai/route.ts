@@ -13,11 +13,10 @@ export async function POST(request: NextRequest) {
           "Authorization": `Bearer ${process.env.AI_API_KEY}`,
           "Content-Type": "application/json",
           // "HTTP-Referer": window.location.href,
-          "X-Title": "TaskFlow AI"
         },
 
         body: JSON.stringify({
-          "model": "nvidia/nemotron-nano-12b-v2-vl:free",
+          "model": "nemotron-3-super-120b-a12b:free",
           "messages": [
             {
               "role": "system",
@@ -49,12 +48,17 @@ User: "Review the project proposal by Friday"
 
 Current date context: ${currentDate}`,
             },
+
             { "role": "user", "content": input }
-          ]
+            
+          ],
+          "reasoning": { "enabled": true }
         })
       })
 
     if (!promptResponse.ok) {
+      const details = await promptResponse.text()
+      console.error("OpenRouter error: ", promptResponse.status, details)
       throw new Error(`OpenRouter API error: ${promptResponse.status}`)
     }
 
