@@ -1,11 +1,9 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Task {
@@ -17,6 +15,31 @@ model Task {
   recurring         Boolean   @default(false)
   recurringInterval String?
   completed         Boolean   @default(false)
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
+
+  @@index([userId])
+  @@unique([id, userId])
+}
+
+model User {
+  id                      String    @id @default(uuid())
+  email                   String    @unique
+  first_name              String    
+  last_name               String
+  username                String    @unique
+  hashed_password         String
+  email_verified          Boolean   @default(false)
+  email_verified_at       DateTime?
+  password_reset_code     String?   @unique
+  password_reset_expires  DateTime?
+  failed_login_attempts   Int       @default(0)
+  locked_until            DateTime? 
+  created_at              DateTime  @default(now())
+  updated_at              DateTime  @updatedAt
+
+  // Relations
+  tasks                   Task[]
 }
