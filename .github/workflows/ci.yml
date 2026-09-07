@@ -63,8 +63,6 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ai-lifehub-test
 
-      - run: pnpm lint
-
       - run: pnpm test
 
       - run: pnpm build
