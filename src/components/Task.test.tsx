@@ -15,7 +15,10 @@ vi.mock('@/src/utils/isOverdue', () => ({
 vi.mock('@/src/utils/formatDate', () => ({
   default: vi.fn((dateStr) => {
     if(!dateStr) return ''
-    return new Date(dateStr).toLocaleDateString()
+    return new Date(dateStr).toLocaleDateString('en-AU', {
+      month: 'short',
+      day: 'numeric'
+    })
   })
 }))
 
@@ -117,7 +120,7 @@ describe('Task Page', () => {
         />
       )
 
-      expect(screen.getByText('31/12/2026')).toBeInTheDocument()
+      expect(screen.getByText('31 Dec')).toBeInTheDocument()
     })
 
     it('should render recurring interval when task is recurring', () => {
