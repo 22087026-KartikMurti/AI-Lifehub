@@ -8,6 +8,7 @@
     "start": "next start",
     "migrate": "prisma migrate dev --name",
     "seed": "prisma db seed",
+    "test": "vitest",
     "test-vitest": "vitest --watch",
     "test-integration": "vitest run tests/integration_tests",
     "lint": "eslint"
