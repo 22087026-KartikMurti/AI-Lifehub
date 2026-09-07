@@ -31,7 +31,7 @@ jobs:
           --health-cmd="pg_isready -U postgres -d ai-lifehub-test"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=4
 
       redis:
         image: redis:7
