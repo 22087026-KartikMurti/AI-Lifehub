@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     const resend = new Resend(process.env.RESEND_API_KEY)
     if(updated.count > 0) {
       await resend.emails.send({
-        from: 'noreply@resend.dev',
+        from: 'noreply@ai-lifehub.xyz',
         to: email,
         subject: 'Your Login Code',
         html: `
