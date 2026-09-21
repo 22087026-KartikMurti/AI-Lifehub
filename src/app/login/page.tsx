@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 import getBaseUrl from '@/src/utils/getBaseUrl'
@@ -12,11 +11,10 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
-    
+
     setError('')
 
     if(username.trim().length === 0) {
@@ -44,7 +42,7 @@ export default function LoginPage() {
 
       if (response.ok) {
         // Redirect to task manager on successful login
-        router.push('/task-manager')
+        window.location.href = '/task-manager'
       } else {
         setError(data.error || 'Login Failed')
       }
