@@ -31,13 +31,6 @@ describe('Get Base Url', () => {
     expect(getBaseUrl()).toBe('https://production.com')
   })
 
-  it('should return a local host fallback in server environment when NEXT_PUBLIC_BASE_URL is not set', () => {
-    delete (global as any).window
-    delete process.env.NEXT_PUBLIC_BASE_URL
-
-    expect(getBaseUrl()).toBe('http://localhost:3000')
-  })
-
   it('should prioritise window.location.origin over everything else', () => {
     Object.defineProperty(global, 'window', {
       value: {

@@ -14,7 +14,9 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    
     setError('')
 
     if(username.trim().length === 0) {
@@ -78,7 +80,7 @@ export default function LoginPage() {
             <p className="mt-2 text-gray-400">Sign in to your account</p>
           </div>
 
-          <form className="mt-8 space-y-6">
+          <form onSubmit={handleSubmit} className="mt-8 space-y-6">
             <div className="space-y-4">
               <div>
                 <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
@@ -125,7 +127,6 @@ export default function LoginPage() {
 
             <Button
               type='submit'
-              onClick={handleSubmit}
               disabled={loading}
               className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors"
             >
