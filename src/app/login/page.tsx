@@ -45,12 +45,12 @@ export default function LoginPage() {
         window.location.href = '/task-manager'
       } else {
         setError(data.error || 'Login Failed')
+        setLoading(false)
       }
     } catch (err) {
       setError('An error occurred. Please try again.')
-    } finally {
       setLoading(false)
-    }
+    } 
   }
 
   return (
@@ -87,7 +87,6 @@ export default function LoginPage() {
                 <input
                   id="username"
                   type="text"
-                  required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -102,7 +101,6 @@ export default function LoginPage() {
                 <input
                   id="password"
                   type="password"
-                  required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"

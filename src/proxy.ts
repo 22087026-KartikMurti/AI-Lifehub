@@ -11,7 +11,7 @@ export function proxy(request: NextRequest) {
     return NextResponse.next()
 
   //Redirects to task-manager page if user already logged in
-  if(pathname === '/login' || pathname === '/signup') {
+  if(pathname === '/login' || pathname === '/signup' || pathname === '/login/forgot-password') {
     if(!authToken)
       return NextResponse.next()
 

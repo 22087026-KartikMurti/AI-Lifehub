@@ -41,7 +41,7 @@ export default function Button({
 
   return (
     <button
-      className={`${variants[variant]} ${className}`}
+      className={`${variants[variant]} cursor-pointer disabled:cursor-not-allowed ${className}`}
       disabled={disabled || loading}
       {...props}
     >
