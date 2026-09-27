@@ -1,5 +1,9 @@
 import jwt from "jsonwebtoken"
 
+interface TokenPayload {
+  id: string
+}
+
 export function generateToken(userId: string) {
   if(typeof userId !== "string" || userId.trim().length === 0)
     throw new Error("Invalid user ID")
@@ -11,9 +15,9 @@ export function generateToken(userId: string) {
   return token
 }
 
-export function verifyToken(token: string) {
+export function verifyToken(token: string): TokenPayload {
   try {
-    return jwt.verify(token, process.env.JWT_SECRET as string)
+    return jwt.verify(token, process.env.JWT_SECRET as string) as TokenPayload
   } catch {
     throw new Error('Invalid Session')
   }
