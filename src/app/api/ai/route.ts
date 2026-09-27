@@ -4,15 +4,26 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
   try {
-    const { input } = await request.json()
+    const { input } = await request.json() //user input
+    /*
+     * new Date object for current date and time - 'T' splits the time from the date
+     * E.g. 2026-09-27T05:42:13.123Z becomes ["2026-09-27", "05:42:13.123Z]
+     * [0] grabs only the date (first element)
+     */
     const currentDate = new Date().toISOString().split('T')[0]
 
+    //Ensure url returns string for use in Openrouter API
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+    if(!baseUrl)
+      throw new Error("NEXT_PUBLIC_BASE_URL is not set")
+
+    //Openrouter API (HTTP Referer is optional, only for logging)
     const promptResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: 'POST',
         headers: {
           "Authorization": `Bearer ${process.env.AI_API_KEY}`,
           "Content-Type": "application/json",
-          // "HTTP-Referer": window.location.href,
+          "HTTP-Referer": baseUrl,
         },
 
         body: JSON.stringify({

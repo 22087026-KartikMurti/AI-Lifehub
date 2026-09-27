@@ -1,6 +1,9 @@
 import jwt from "jsonwebtoken"
 
 export function generateToken(userId: string) {
+  if(typeof userId !== "string" || userId.trim().length === 0)
+    throw new Error("Invalid user ID")
+
   const payload = { id: userId }
 
   const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: "1d" })
@@ -10,7 +13,7 @@ export function generateToken(userId: string) {
 
 export function verifyToken(token: string) {
   try {
-    return jwt.verify(token, process.env.JWT_SECRET as string) as { id: string }
+    return jwt.verify(token, process.env.JWT_SECRET as string)
   } catch {
     throw new Error('Invalid Session')
   }

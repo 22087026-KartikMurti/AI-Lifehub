@@ -226,3 +226,21 @@ describe('POST /api/auth/login', () => {
     })    
   })
 })
+
+describe('DELETE /api/auth/login', () => {
+  it("returns success and clears the auth cookie", async () => {
+    /*
+     * sets a header for auth_token with set-cookie and expiry Thu, 01 Jan 1970
+     * then the browser deletes the token based on expiry since there isn't a 
+     *direct delete button for cookies
+     */
+    const res = await DELETE()
+    const body = await res.json()
+    const setCookie = res.headers.get("set-cookie")
+
+    expect(res.status).toBe(200) // status code for response is ok
+    expect(body).toEqual({ success: true })
+    expect(setCookie).toContain("auth_token=") // token should now have an empty value
+    expect(setCookie).toMatch(/Expires=Thu, 01 Jan 1970/i) // token should be expired for deletion
+  })
+})
