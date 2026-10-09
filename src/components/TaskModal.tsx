@@ -5,27 +5,31 @@ import Button from './Button'
 import { Task } from '@/src/types/task'
 import { X } from 'lucide-react'
 
-export default function EditTask({
+export default function TaskModal({
   task,
   onSave,
   onClose
 }: {
-  task: Task
+  task?: Task
   onSave: (formData: Partial<Task>) => void
   onClose: () => void
 }) {
   const [formData, setFormData] = useState<Partial<Task>>({})
 
   useEffect(() => {
-    setFormData({
-      title: task.title,
-      description: task.description,
-      priority: task.priority,
-      dueDate: task.dueDate,
-      recurring: task.recurring,
-      recurringInterval: task.recurringInterval
-    })
-  }, [task])
+    if(task) {
+      setFormData({
+        title: task.title,
+        description: task.description,
+        priority: task.priority,
+        dueDate: task.dueDate,
+        recurring: task.recurring,
+        recurringInterval: task.recurringInterval
+      })
+    } else {
+      setFormData({ recurring: false })
+    }
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -36,7 +40,7 @@ export default function EditTask({
     <div className="fixed inset-0 bg-gray-500/30 dark:bg-gray-200/30 flex items-center justify-center p-4 z-50">
       <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-lg w-full p-6 shadow-xl">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-bold text-gray-800 dark:text-white">Edit Task</h3>
+          <h3 className="text-xl font-bold text-gray-800 dark:text-white">{task ? 'Edit Task' : 'Create Task'}</h3>
           <Button
             aria-label='Close button'
             onClick={onClose}

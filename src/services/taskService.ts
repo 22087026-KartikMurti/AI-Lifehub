@@ -38,7 +38,7 @@ export const taskService = {
    * @returns {Promise<any>} A promise that resolves to the created task payload from the API.
    * @throws {Error} If the request fails or the backend returns an error payload.
    */
-  async createTask(task: Task): Promise<any> {
+  async createTask(task: Partial<Task>): Promise<any> {
     const response = await fetch(`${getBaseUrl()}/api/tasks`, {
       method: 'POST',
       headers: {

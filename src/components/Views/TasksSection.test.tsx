@@ -503,7 +503,7 @@ describe('TasksSection', () => {
       await user.click(saveButton)
 
       await waitFor(() => {
-        expect(screen.getByText(/Updated task returned as null/)).toBeInTheDocument()
+        expect(screen.getByText(/Task to update returned as null/)).toBeInTheDocument()
       })
     })
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import EditTask from './EditTask'
+import TaskModal from './TaskModal'
 import { Task } from '@/src/types/task'
 
 describe('Edit Task', () => {
@@ -25,7 +25,7 @@ describe('Edit Task', () => {
   })
 
   it('should render modal with task data', () => {
-    render(<EditTask task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
+    render(<TaskModal task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
 
     expect(screen.getByText('Edit Task')).toBeInTheDocument()
     expect(screen.getByDisplayValue('Test Task')).toBeInTheDocument()
@@ -37,7 +37,7 @@ describe('Edit Task', () => {
 
   it('should call onClose when close button is clicked', async () => {
     const user = userEvent.setup()
-    render(<EditTask task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
+    render(<TaskModal task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
 
     const closeButton = screen.getByRole('button', { name: 'Close button' })
     await user.click(closeButton)
@@ -47,7 +47,7 @@ describe('Edit Task', () => {
 
   it('should call onClose when cancel button is clicked', async () => {
     const user = userEvent.setup()
-    render(<EditTask task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
+    render(<TaskModal task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
 
     const cancelButton = screen.getByRole('button', { name: 'Cancel' })
     await user.click(cancelButton)
@@ -57,7 +57,7 @@ describe('Edit Task', () => {
 
   it('should update input fields', async () => {
     const user = userEvent.setup()
-    render(<EditTask task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
+    render(<TaskModal task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
 
     const titleInput = screen.getByLabelText('Title') as HTMLInputElement
     await user.clear(titleInput)
@@ -82,7 +82,7 @@ describe('Edit Task', () => {
 
   it('should show/hide recurring interval input when toggling recurring checkbox', async () => {
     const user = userEvent.setup()
-    render(<EditTask task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
+    render(<TaskModal task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
     
     const recurringCheckbox = screen.getByLabelText('Recurring Task')
     await user.click(recurringCheckbox)
@@ -98,7 +98,7 @@ describe('Edit Task', () => {
       recurring: true,
       recurringInterval: 'Weekly'
     }
-    render(<EditTask task={recurringTask} onSave={mockOnSave} onClose={mockOnClose} />)
+    render(<TaskModal task={recurringTask} onSave={mockOnSave} onClose={mockOnClose} />)
     
     expect(screen.getByLabelText('Recurring Task')).toBeChecked()
     expect(screen.getByDisplayValue('Weekly')).toBeInTheDocument()
@@ -127,7 +127,7 @@ describe('Edit Task - Negative Testing', () => {
 
   it('should not call onSave when title is empty', async () => {
     const user = userEvent.setup()
-    render(<EditTask task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
+    render(<TaskModal task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
     
     const titleInput = screen.getByLabelText('Title')
     await user.clear(titleInput)
@@ -148,7 +148,7 @@ describe('Edit Task - Negative Testing', () => {
       createdAt: testDate
     }
 
-    render(<EditTask task={minimalTask} onSave={mockOnSave} onClose={mockOnClose} />)
+    render(<TaskModal task={minimalTask} onSave={mockOnSave} onClose={mockOnClose} />)
     
     expect(screen.getByDisplayValue('Minimal Task')).toBeInTheDocument()
     expect(screen.getByLabelText('Description')).toHaveValue('')
@@ -160,7 +160,7 @@ describe('Edit Task - Negative Testing', () => {
     const longText = 'A'.repeat(300)
 
     it('should handle long title inputs', async () => {
-      render(<EditTask task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
+      render(<TaskModal task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
 
       const titleInput = screen.getByLabelText('Title')
 
@@ -172,7 +172,7 @@ describe('Edit Task - Negative Testing', () => {
     })
     
     it('should handle long description inputs', async () => {
-      render(<EditTask task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
+      render(<TaskModal task={mockTask} onSave={mockOnSave} onClose={mockOnClose} />)
 
       const descInput = screen.getByLabelText('Description')
 
@@ -187,7 +187,7 @@ describe('Edit Task - Negative Testing', () => {
         ...mockTask,
         recurring: true
       }
-      render(<EditTask task={adjustedTask} onSave={mockOnSave} onClose={mockOnClose} />)
+      render(<TaskModal task={adjustedTask} onSave={mockOnSave} onClose={mockOnClose} />)
 
       const recurInput = screen.getByLabelText('Recurring Interval')
 

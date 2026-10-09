@@ -6,13 +6,15 @@ import { Task } from "@/src/types/task";
 import { ToastProps } from "@/src/types/toast";
 import { taskService } from "@/src/services/taskService";
 import Toast from '../Toast';
-import EditTask from '../EditTask';
+import TaskModal from '../TaskModal';
 import TaskPage from '../Task';
+import Button from '../Button';
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [toast, setToast] = useState<ToastProps | null>(null)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
+  const [creatingTask, setCreatingTask] = useState(false)
   const [loadingTasks, setLoadingTasks] = useState(true)
 
   useEffect(() => {
@@ -36,11 +38,37 @@ export default function TasksPage() {
   const openEditModal = (task: Task) => {
     setEditingTask(task)
   }
+
+  const createTask = async(formData: Partial<Task>) => {
+    if(!creatingTask) return
+
+    try {
+      const createdTask = await taskService.createTask(formData)
+
+      if(createdTask) {
+        setTasks(prev => [...prev, createdTask])
+        setToast({ message: 'Task Created Successfully', type: 'success' })
+      } else {
+        setToast({ message: 'Task to create was returned as null', type: 'error' })
+      }
+
+      setCreatingTask(false)
+    } catch(error) {
+      setToast({ message: 'Failed to create task.', type: "error"})
+      console.log(`Failed to create task`, error)
+    }
+  }
     
   const updateTask = async (formData: Partial<Task>) => {
     if(!editingTask) return
 
     try {
+
+      if(!editingTask.id) {
+        setToast({ message: 'Could not find the task', type: 'error'})
+        return
+      }
+
       const updatedTask = await taskService.updateTask(editingTask.id, formData)
       if(updatedTask) {
         setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t))
@@ -50,6 +78,10 @@ export default function TasksPage() {
           undo: true,
           onRestore: async () => {
             try {
+              if(!editingTask.id) {
+                setToast({ message: 'Could not find the task', type: 'error'})
+                return
+              }
               const restoredTask = await taskService.updateTask(editingTask.id, editingTask)
               setTasks(prev => prev.map(t => t.id === restoredTask.id ? restoredTask : t))
               setToast({ message: 'Previous Task Restored!', type: 'success' })
@@ -59,7 +91,7 @@ export default function TasksPage() {
           } 
         })
       } else {
-        throw new Error('Updated task returned as null')
+        setToast({ message: 'Task to update returned as null', type: 'error' })
       }
       setEditingTask(null)
     } catch(error) {
@@ -73,6 +105,12 @@ export default function TasksPage() {
     if(!task) return 
 
     try {
+
+      if(!task.id) {
+        setToast({ message: 'Could not find the task', type: 'error'})
+        return
+      }
+
       const toggledTask = await taskService.toggleTask(task.id, !task.completed)
       if(toggledTask.completed) {
         setToast({ message: 'Task Complete!', type: 'success'})
@@ -98,6 +136,12 @@ export default function TasksPage() {
     if(!task) return 
 
     try {
+
+      if(!task.id) {
+        setToast({ message: 'Could not find the task', type: 'error'})
+        return
+      }
+
       const deletedTask = await taskService.deleteTask(task.id)
       delete deletedTask.id
 
@@ -134,7 +178,6 @@ export default function TasksPage() {
         />
       )}
       <div className="flex-1 overflow-y-auto p-6">
-        
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
             Tasks: <span className={`${tasks.filter(t => t.completed).length !== tasks.length ? 'text-yellow-600 dark:text-yellow-300' : 'text-green-500 dark:text-green-300'}`}>
@@ -174,16 +217,24 @@ export default function TasksPage() {
 
             )
           }
+        </div>
       </div>
 
       {editingTask && (
-        <EditTask
+        <TaskModal
           task={editingTask}
           onClose={() => setEditingTask(null)}
           onSave={updateTask}
         />
       )}
-      </div>
+      {creatingTask ? (
+        <TaskModal
+          onClose={() => setCreatingTask(false)}
+          onSave={createTask}
+        />
+      ) : null}
+
+      <Button onClick={() => setCreatingTask(true)}>Create Task</Button>
     </>
   )
 }

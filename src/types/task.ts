@@ -1,5 +1,5 @@
 export type Task = {
-  id: string
+  id?: string
   title: string
   description?: string
   dueDate?: string | null
@@ -7,5 +7,5 @@ export type Task = {
   recurring: boolean
   recurringInterval?: string | null
   completed: boolean
-  createdAt: string
+  createdAt?: string
 }
