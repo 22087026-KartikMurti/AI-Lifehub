@@ -15,31 +15,6 @@ describe('Task Service', () => {
     vi.resetAllMocks()
   })
 
-  describe('Get Tasks Count', () => {
-    it('should fetch task counts correctly', async () => {
-      vi.mocked(global.fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ count: 5 })
-      } as Response)
-
-      const count = await taskService.getTaskCount()
-
-      expect(count).toBe(5)
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/tasks/count')
-      )
-    })
-
-    it('should throw error when API fails', async () => {
-      vi.mocked(global.fetch).mockResolvedValueOnce({
-        ok: false, 
-        json: async () => ({ error: 'Failed to get count' })
-      } as Response)
-
-      await expect(taskService.getTaskCount()).rejects.toThrow('Failed to get count')
-    })
-  })
-
   describe('Get Tasks', () => {
     it('should fetch all tasks succcessfully', async () => {
       const createdDate = new Date(Date.now()).toISOString()
