@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         },
 
         body: JSON.stringify({
-          "model": "nemotron-3-super-120b-a12b:free",
+          "model": "nemotron-3.5-embed-1b:free",
           "messages": [
             {
               "role": "system",
