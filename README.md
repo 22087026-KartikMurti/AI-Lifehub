@@ -69,3 +69,8 @@ I am using NVIDIA's nemotron-3-super-120b-a12b:free model for AI, due to token b
 ## Default Account for Quick Access
 
 There is a default account under username 'demo' with password being 'password' to use for quick access in the development and production builds. If you have trouble logging in the development build, type `pnpm seed` or `npm run seed` and try using the previously mentioned credentials to log in once more.
+
+
+# TODOs:
+
+ - Tests for AI connection and upstash connection pre-checks

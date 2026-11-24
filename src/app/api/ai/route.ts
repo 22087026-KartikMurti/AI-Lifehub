@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         },
 
         body: JSON.stringify({
-          "model": "nvidia/nemotron-3.5-embed-1b:free",
+          "model": "nvidia/nemotron-3.5-super-vl:free",
           "messages": [
             {
               "role": "system",
