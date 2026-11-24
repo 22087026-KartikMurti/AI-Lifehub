@@ -234,7 +234,7 @@ export default function TasksPage() {
         />
       ) : null}
 
-      <Button onClick={() => setCreatingTask(true)}>Create Task</Button>
+      <Button variant="primary" onClick={() => setCreatingTask(true)}>Create Task</Button>
     </>
   )
 }
